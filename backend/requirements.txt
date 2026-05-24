@@ -1,0 +1,14 @@
+# Portaldot Python SDK (Substrate-based chain interface)
+substrate-interface>=1.7.0
+
+# FastAPI backend
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+
+# OpenRouter for intent parsing (OpenAI-compatible)
+openai
+
+
+# Utility
+python-dotenv>=1.0.0
+pydantic>=2.0.0
