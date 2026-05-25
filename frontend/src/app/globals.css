@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0C0C0F;
+  --surface: #111114;
+  --accent: #F59E0B;
+  --foreground: #ffffff;
+  
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.03);
+  
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-accent: var(--accent);
+  --color-foreground: var(--foreground);
+  --color-border-glass: var(--border-glass);
+  --color-border-subtle: var(--border-subtle);
+  
+  --font-sans: var(--font-syne), sans-serif;
+  --font-mono: var(--font-dm-mono), monospace;
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Custom Dark Mode Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #27272A;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #52525B;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #27272A transparent;
+}
+
+/* Design Engineering & Tactile Micro-interactions */
+.btn-tactile {
+  transition: transform 100ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 150ms ease, opacity 150ms ease, border-color 150ms ease;
+}
+.btn-tactile:active {
+  transform: scale(0.97) !important;
+}
+
+/* Hardware-accelerated Snappy Ease-Out transition */
+.transition-premium {
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+/* Snappy fast spinning loader */
+.animate-spin-fast {
+  animation: spin 0.6s linear infinite;
+}
+
