@@ -25,3 +25,6 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+.env
+keystore.json
+chroma_db*

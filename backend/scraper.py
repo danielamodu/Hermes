@@ -47,7 +47,10 @@ def scrape_and_chunk(url: str, chunk_size: int = 500) -> list[dict]:
         # get paragraphs and code blocks separately
         chunks = []
         for element in content.find_all(['p', 'pre', 'li', 'h1', 'h2', 'h3']):
-            text = element.get_text(strip=True)
+            if element.name == 'pre':
+                text = element.get_text(separator=' ').strip()
+            else:
+                text = element.get_text(strip=True)
             if len(text) > 20:  # skip short nav fragments, but keep titles/commands
                 chunks.append({'text': text, 'source': url})
         return chunks
