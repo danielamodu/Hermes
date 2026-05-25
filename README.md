@@ -14,7 +14,7 @@ Hermes is a full-stack AI agent that translates natural language into direct Por
 
 - **Natural Language Chain Queries** — block height, network status, runtime info, total supply
 - **POT Transfers** — send POT directly from the wallet panel, real onchain tx with gas shown
-- **Wallet Management** — generate new Portaldot wallets, check balances, view recent transactions
+- **Wallet Management** — check balances, view recent transactions
 - **Block Explorer** — query any block by number, returns hash and extrinsic count
 - **Address Inspector** — inspect any SS58 address, check balance and nonce
 - **Fee Estimation** — estimate POT transfer fees before sending
