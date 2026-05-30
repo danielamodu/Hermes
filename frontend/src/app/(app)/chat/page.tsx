@@ -144,7 +144,7 @@ export default function ChatPage() {
         setPotBalance("0 POT");
       }
     } catch (e) {
-      console.error(e);
+      // Silently ignore parse errors for old telemetry data
       setPotBalance("Error loading balance");
     } finally {
       setIsFetchingBalance(false);
@@ -269,7 +269,7 @@ export default function ChatPage() {
         try {
           setRecentTxs(JSON.parse(saved));
         } catch (e) {
-          console.error(e);
+          // Ignore parse errors
         }
       } else {
         setRecentTxs([]);
@@ -405,7 +405,7 @@ export default function ChatPage() {
           const parsed = JSON.parse(stored) as ChatSession[];
           setSessions(parsed);
         } catch (e) {
-          console.error("Failed to parse stored sessions:", e);
+          // Ignore session parse errors
         }
       } else {
         setSessions([]);
@@ -1313,11 +1313,34 @@ export default function ChatPage() {
                 </button>
               )}
 
-              <div className="flex flex-col gap-1">
-                <span className="text-[#F59E0B] font-bold text-sm tracking-wide uppercase">Portaldot Account</span>
+              <div className="flex flex-col gap-1 mb-2">
+                <span className="text-[#F59E0B] font-bold text-sm tracking-wide uppercase flex items-center gap-2">
+                  Welcome to Hermes
+                </span>
                 <p className="text-zinc-400 text-sm leading-relaxed">
-                  Enter your Portaldot address to get started. History and sessions will be namespaced to this address.
+                  Hermes is your technical co-pilot for the Portaldot chain. History and sessions will be namespaced to your address.
                 </p>
+              </div>
+
+              <div className="bg-zinc-900/50 border border-zinc-800/80 rounded-xl p-4 flex flex-col gap-3">
+                <div className="flex flex-col gap-0.5">
+                  <p className="text-zinc-200 font-semibold text-sm">First time here?</p>
+                  <p className="text-zinc-500 text-xs leading-relaxed">Generate a temporary Portaldot address to start exploring instantly.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleGenerateAddress}
+                  disabled={isGeneratingWallet}
+                  className="bg-[#F59E0B] hover:bg-amber-500 active:bg-amber-600 text-black font-bold py-2.5 px-4 rounded-lg text-sm w-full transition-colors flex items-center justify-center disabled:opacity-50"
+                >
+                  {isGeneratingWallet ? "Generating..." : "Generate Test Wallet"}
+                </button>
+              </div>
+
+              <div className="flex items-center gap-3 my-1">
+                <div className="h-px bg-zinc-800 flex-1"></div>
+                <span className="text-zinc-600 text-[10px] font-bold uppercase tracking-wider">OR</span>
+                <div className="h-px bg-zinc-800 flex-1"></div>
               </div>
 
               <form
@@ -1336,6 +1359,7 @@ export default function ChatPage() {
                 className="flex flex-col gap-3.5"
               >
                 <div className="flex flex-col gap-1.5">
+                  <p className="text-zinc-300 font-semibold text-sm mb-0.5">Use existing address</p>
                   <input
                     type="text"
                     placeholder="e.g. 5GrwvaEF5zXb26Fz9rcQpDWS57CteRHpNehXCPcNNoHGKutQY"
@@ -1347,7 +1371,6 @@ export default function ChatPage() {
                     className="bg-zinc-950/80 border border-zinc-800 rounded-lg px-3 py-2.5 outline-none focus:border-[#F59E0B] text-zinc-200 transition-all font-sans text-xs w-full placeholder-zinc-700 font-mono"
                     aria-label="Portaldot address"
                     aria-describedby={modalError ? "modal-error" : undefined}
-                    autoFocus
                   />
                   {modalError && (
                     <div id="modal-error" role="alert" className="flex items-start gap-1.5 text-red-400 text-sm leading-relaxed mt-0.5">
@@ -1355,21 +1378,6 @@ export default function ChatPage() {
                       <span>{modalError}</span>
                     </div>
                   )}
-                  
-                  <span className="text-zinc-500 text-sm leading-relaxed mt-1">
-                    A Portaldot address is a unique identifier for your account on the network. It starts with the number 5 and is 47–48 characters long.
-                  </span>
-
-                  <div className="mt-1">
-                    <button
-                      type="button"
-                      onClick={handleGenerateAddress}
-                      disabled={isGeneratingWallet}
-                      className="text-amber-500 hover:text-amber-400 text-sm underline text-left cursor-pointer transition-colors"
-                    >
-                      {isGeneratingWallet ? "Generating..." : "Don't have a Portaldot address? Generate one"}
-                    </button>
-                  </div>
                 </div>
 
                 {showWarningBanner && (
@@ -1380,9 +1388,9 @@ export default function ChatPage() {
 
                 <button
                   type="submit"
-                  className="bg-[#F59E0B] hover:bg-amber-600 active:bg-amber-700 text-black py-2.5 rounded-lg font-bold btn-tactile uppercase cursor-pointer text-xs tracking-wider"
+                  className="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 py-2.5 rounded-lg font-bold btn-tactile uppercase cursor-pointer text-xs tracking-wider transition-colors"
                 >
-                  Confirm
+                  Confirm Address
                 </button>
               </form>
             </motion.div>
