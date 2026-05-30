@@ -257,13 +257,15 @@ class ChainClient:
             
             keypair = Keypair.create_from_uri("//Alice")
             extrinsic = self.chain.create_signed_extrinsic(call=call, keypair=keypair)
-            receipt = self.chain.submit_extrinsic(extrinsic, wait_for_inclusion=False)
+            receipt = self.chain.submit_extrinsic(extrinsic, wait_for_inclusion=True)
             tx_hash = getattr(receipt, 'extrinsic_hash', receipt)
+            block_hash = getattr(receipt, 'block_hash', None)
             
             return {
                 "status": "success",
                 "data": {
                     "tx_hash": tx_hash,
+                    "block_hash": block_hash,
                     "dest": dest,
                     "amount": f"{amount:,.4f} POT"
                 }

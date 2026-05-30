@@ -203,7 +203,7 @@ export default function ChatPage() {
     if (!sendRecipient.trim() || !sendAmount.trim()) return;
     
     const amountVal = parseFloat(sendAmount);
-    const balanceVal = parseFloat(potBalance);
+    const balanceVal = parseFloat(potBalance || "0");
     if (isNaN(amountVal) || amountVal <= 0) {
       setSendError("Please enter a valid amount.");
       return;
