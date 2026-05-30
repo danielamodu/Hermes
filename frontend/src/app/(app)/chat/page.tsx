@@ -743,7 +743,7 @@ export default function ChatPage() {
                   placeholder="Search sessions..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded px-2.5 py-1.5 text-zinc-300 outline-none font-mono text-sm focus:border-[#F59E0B]"
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded px-2.5 py-1.5 text-zinc-300 outline-none font-mono text-sm focus:border-accent"
                   autoFocus
                 />
               </div>
@@ -873,7 +873,7 @@ export default function ChatPage() {
         {!isSidebarOpen && (
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="absolute top-4 left-4 p-2 text-zinc-400 hover:bg-[#F59E0B]/10 hover:text-[#F59E0B] rounded-full btn-tactile z-50 cursor-pointer"
+            className="absolute top-4 left-4 p-2 text-zinc-400 hover:bg-accent/10 hover:text-accent rounded-full btn-tactile z-50 cursor-pointer"
             title="Expand Sidebar"
           >
             <PanelLeftOpen size={20} />
@@ -895,10 +895,10 @@ export default function ChatPage() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex space-x-6 text-sm text-white/60 font-medium">
-            <Link href="/" className="hover:text-[#F59E0B] transition-colors whitespace-nowrap">Home</Link>
-            <Link href="/chat" className="text-[#F59E0B] font-semibold whitespace-nowrap">Chat</Link>
-            <Link href="/explorer" className="hover:text-[#F59E0B] transition-colors whitespace-nowrap">Explorer</Link>
-            <Link href="/docs" className="hover:text-[#F59E0B] transition-colors whitespace-nowrap">Docs</Link>
+            <Link href="/" className="hover:text-accent transition-colors whitespace-nowrap">Home</Link>
+            <Link href="/chat" className="text-accent font-semibold whitespace-nowrap">Chat</Link>
+            <Link href="/explorer" className="hover:text-accent transition-colors whitespace-nowrap">Explorer</Link>
+            <Link href="/docs" className="hover:text-accent transition-colors whitespace-nowrap">Docs</Link>
           </nav>
           {activeAddress && (
             <div className="flex items-center gap-3 relative">
@@ -910,7 +910,7 @@ export default function ChatPage() {
                 }}
                 className="flex items-center gap-2 bg-zinc-900/60 hover:bg-zinc-800/40 border border-zinc-800/80 hover:border-amber-500/30 px-3.5 py-1.5 rounded-full text-sm text-zinc-400 hover:text-zinc-200 transition-all font-mono btn-tactile cursor-pointer"
               >
-                <div className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] "></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-accent "></div>
                 <span>{`${activeAddress.slice(0, 6)}...${activeAddress.slice(-4)}`}</span>
                 <span className="text-xs text-zinc-600">▼</span>
               </button>
@@ -947,7 +947,7 @@ export default function ChatPage() {
                         </div>
                         <button
                           onClick={() => handleCopyToClipboard(activeAddress, 'fullAddress')}
-                          className="text-[#F59E0B] hover:text-amber-400 text-sm flex items-center gap-1 cursor-pointer font-bold select-none transition-colors"
+                          className="text-accent hover:text-amber-400 text-sm flex items-center gap-1 cursor-pointer font-bold select-none transition-colors"
                         >
                           {copiedText === 'fullAddress' ? 'copied!' : 'copy'}
                         </button>
@@ -967,7 +967,7 @@ export default function ChatPage() {
                             <span>Loading balance...</span>
                           </div>
                         ) : (
-                          <span className="text-xs font-bold text-[#F59E0B] font-mono tracking-wide">
+                          <span className="text-xs font-bold text-accent font-mono tracking-wide">
                             {potBalance || "0.0000 POT"}
                           </span>
                         )}
@@ -984,7 +984,7 @@ export default function ChatPage() {
                           </span>
                           <button
                             onClick={() => handleCopyToClipboard(activeAddress, 'receiveAddress')}
-                            className="text-[#F59E0B] hover:text-amber-400 text-xs underline cursor-pointer shrink-0 font-bold"
+                            className="text-accent hover:text-amber-400 text-xs underline cursor-pointer shrink-0 font-bold"
                           >
                             {copiedText === 'receiveAddress' ? 'copied!' : 'copy'}
                           </button>
@@ -1019,7 +1019,7 @@ export default function ChatPage() {
                     e.stopPropagation();
                     setShowProfileDropdown(!showProfileDropdown);
                   }}
-                  className="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-[#F59E0B] rounded-full border border-zinc-700/50 flex items-center justify-center font-bold font-mono btn-tactile cursor-pointer text-xs"
+                  className="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-accent rounded-full border border-zinc-700/50 flex items-center justify-center font-bold font-mono btn-tactile cursor-pointer text-xs"
                   title="User Settings"
                 >
                   {username ? username.slice(0, 2).toUpperCase() : "U"}
@@ -1034,7 +1034,7 @@ export default function ChatPage() {
                       exit={{ opacity: 0, scale: 0.95, y: -4 }}
                       transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
                       onClick={(e) => e.stopPropagation()}
-                      className="absolute right-0 mt-2 w-56 bg-[#0C0C0E] border border-zinc-800/60 rounded-lg shadow-2xl p-4 flex flex-col gap-3 font-mono text-zinc-200 z-[100] text-xs text-left origin-top-right will-change-transform"
+                      className="absolute right-0 mt-2 w-56 bg-background border border-zinc-800/60 rounded-lg shadow-2xl p-4 flex flex-col gap-3 font-mono text-zinc-200 z-[100] text-xs text-left origin-top-right will-change-transform"
                     >
                       {/* Header */}
                       <div className="flex flex-col gap-1 border-b border-zinc-800 pb-2">
@@ -1050,7 +1050,7 @@ export default function ChatPage() {
                           value={editUsernameValue}
                           onChange={(e) => setEditUsernameValue(e.target.value)}
                           placeholder="New username..."
-                          className="bg-zinc-950 border border-zinc-800 rounded px-2 py-1.5 text-zinc-200 w-full outline-none font-mono text-xs focus:border-[#F59E0B]"
+                          className="bg-zinc-950 border border-zinc-800 rounded px-2 py-1.5 text-zinc-200 w-full outline-none font-mono text-xs focus:border-accent"
                         />
                       </div>
 
@@ -1064,7 +1064,7 @@ export default function ChatPage() {
                             setShowProfileDropdown(false);
                           }
                         }}
-                        className="bg-[#F59E0B]/10 hover:bg-[#F59E0B]/20 text-[#F59E0B] py-1.5 rounded font-bold uppercase btn-tactile text-sm tracking-wide text-center"
+                        className="bg-accent/10 hover:bg-accent/20 text-accent py-1.5 rounded font-bold uppercase btn-tactile text-sm tracking-wide text-center"
                       >
                         Save
                       </button>
@@ -1300,7 +1300,7 @@ export default function ChatPage() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 10 }}
               transition={{ type: "spring", stiffness: 400, damping: 30, mass: 0.8 }}
-              className="bg-[#0C0C0E] border border-zinc-800/80 p-6 rounded-2xl w-full max-w-md flex flex-col gap-4 font-mono text-xs shadow-2xl relative text-zinc-200 will-change-transform"
+              className="bg-background border border-zinc-800/80 p-6 rounded-2xl w-full max-w-md flex flex-col gap-4 font-mono text-xs shadow-2xl relative text-zinc-200 will-change-transform"
             >
               
               {/* Show close/cancel button ONLY if we already have a valid activeAddress */}
@@ -1314,7 +1314,7 @@ export default function ChatPage() {
               )}
 
               <div className="flex flex-col gap-1 mb-2">
-                <span className="text-[#F59E0B] font-bold text-sm tracking-wide uppercase flex items-center gap-2">
+                <span className="text-accent font-bold text-sm tracking-wide uppercase flex items-center gap-2">
                   Welcome to Hermes
                 </span>
                 <p className="text-zinc-400 text-sm leading-relaxed">
@@ -1331,7 +1331,7 @@ export default function ChatPage() {
                   type="button"
                   onClick={handleGenerateAddress}
                   disabled={isGeneratingWallet}
-                  className="bg-[#F59E0B] hover:bg-amber-500 active:bg-amber-600 text-black font-bold py-2.5 px-4 rounded-lg text-sm w-full transition-colors flex items-center justify-center disabled:opacity-50"
+                  className="bg-accent hover:bg-amber-500 active:bg-amber-600 text-black font-bold py-2.5 px-4 rounded-lg text-sm w-full transition-colors flex items-center justify-center disabled:opacity-50"
                 >
                   {isGeneratingWallet ? "Generating..." : "Generate Test Wallet"}
                 </button>
@@ -1368,7 +1368,7 @@ export default function ChatPage() {
                       setModalInput(e.target.value);
                       if (modalError) setModalError(null);
                     }}
-                    className="bg-zinc-950/80 border border-zinc-800 rounded-lg px-3 py-2.5 outline-none focus:border-[#F59E0B] text-zinc-200 transition-all font-sans text-xs w-full placeholder-zinc-700 font-mono"
+                    className="bg-zinc-950/80 border border-zinc-800 rounded-lg px-3 py-2.5 outline-none focus:border-accent text-zinc-200 transition-all font-sans text-xs w-full placeholder-zinc-700 font-mono"
                     aria-label="Portaldot address"
                     aria-describedby={modalError ? "modal-error" : undefined}
                   />
