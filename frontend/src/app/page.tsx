@@ -3,6 +3,7 @@
 import BackgroundEffects from '@/components/BackgroundEffects';
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const CodeBoilerplate = () => (
   <pre className="text-[11px] md:text-xs leading-relaxed text-zinc-400 font-mono overflow-x-auto p-4 bg-[#111114]/80 border border-white/[0.06] rounded-none h-full max-h-[350px] overflow-y-auto">
@@ -45,6 +46,7 @@ const CodeBoilerplate = () => (
 );
 
 export default function LandingPage() {
+  const router = useRouter();
   const fullCommandText = "show me total POT supply and current block height";
   const [typedText, setTypedText] = useState("");
   const [typingIndex, setTypingIndex] = useState(0);
@@ -123,80 +125,8 @@ export default function LandingPage() {
     if (!customInput.trim()) return;
 
     const cmd = customInput.trim();
-    const cleanCmd = cmd.toLowerCase();
-
-    // Add user input
-    setHistory(prev => [...prev, { type: "input", text: cmd }]);
-    setCustomInput("");
-
-    setTimeout(() => {
-      if (cleanCmd === "help") {
-        setHistory(prev => [
-          ...prev,
-          {
-            type: "output",
-            text: `Available commands:
-  - deploy <name>   Instantiate ink! contract
-  - tx <hash>       Query transaction details
-  - balance         Check developer account balance
-  - system          Show agent node telemetry
-  - clear           Clear console log history`
-          }
-        ]);
-      } else if (cleanCmd === "clear") {
-        setHistory([]);
-      } else if (cleanCmd === "balance") {
-        setHistory(prev => [
-          ...prev,
-          {
-            type: "output",
-            text: `[info] querying dev keypair...
-[account] 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY
-[balance] 1,250.45 UNIT (Portaldot Devnet)`
-          }
-        ]);
-      } else if (cleanCmd === "system") {
-        setHistory(prev => [
-          ...prev,
-          {
-            type: "output",
-            text: `[system] Hermes Agent OS v1.0.0 (active)
-[status] Synced with Portaldot local-node
-[keystore] Loaded: DevKeypair
-[inference] 2ms execution latency (powered by Groq)`
-          }
-        ]);
-      } else if (cleanCmd.startsWith("deploy")) {
-        const tokenName = cmd.split(" ").slice(1).join(" ") || "CustomToken";
-        setHistory(prev => [
-          ...prev,
-          {
-            type: "output",
-            text: `[info] parsing intent: "deploy contract ${tokenName}"...
-[intent] classified: DEPLOY_CONTRACT
-[info] fetching wasm artifacts...
-[info] signing transaction using keystore...`,
-            details: {
-              success: true,
-              contractName: tokenName,
-              address: "5D34uK5a..." + Math.random().toString(36).substring(2, 10),
-              txHash: "0x" + Math.random().toString(16).substring(2, 34)
-            }
-          }
-        ]);
-      } else {
-        setHistory(prev => [
-          ...prev,
-          {
-            type: "output",
-            text: `[info] parsing custom intent: "${cmd}"...
-[intent] classified: AGENT_TRANSACTION
-[info] executing custom agent task...
-[success] transaction completed successfully!`
-          }
-        ]);
-      }
-    }, 400);
+    // Route to chat app with query
+    router.push(`/chat?q=${encodeURIComponent(cmd)}`);
   };
 
   return (

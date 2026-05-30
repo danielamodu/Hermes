@@ -64,6 +64,7 @@ const getGreeting = () => {
 };
 
 export default function ChatPage() {
+  const [pendingQuery, setPendingQuery] = useState<string | null>(null);
   const [activeAddress, setActiveAddress] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [modalInput, setModalInput] = useState("");
@@ -292,6 +293,13 @@ export default function ChatPage() {
   const [renameValue, setRenameValue] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  // Auto-close sidebar on mobile
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
+  }, []);
+
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
 
@@ -312,7 +320,7 @@ export default function ChatPage() {
       if (e.key.toLowerCase() === 'n') {
         e.preventDefault();
         document.getElementById('new-chat-btn')?.click();
-      } else if (e.key === '[' || (e.key === '\\' && e.metaKey)) {
+      } else if ((e.key === 'b' && (e.metaKey || e.ctrlKey)) || (e.key === '\\' && (e.metaKey || e.ctrlKey))) {
         e.preventDefault();
         setIsSidebarOpen(prev => !prev);
       } else if (e.key === 'Escape') {
@@ -377,6 +385,13 @@ export default function ChatPage() {
         setActiveAddress(saved);
       } else {
         setShowModal(true);
+      }
+      
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+      if (q) {
+        setPendingQuery(q);
+        window.history.replaceState({}, '', '/chat');
       }
     }
   }, []);
@@ -622,6 +637,31 @@ export default function ChatPage() {
     }
   };
 
+  useEffect(() => {
+    if (activeAddress && pendingQuery) {
+      const cmd = pendingQuery;
+      setPendingQuery(null);
+
+      const newId = generateUniqueId();
+      const newSession: ChatSession = {
+        id: newId,
+        timestamp: new Date().toISOString(),
+        title: cmd.slice(0, 16) + (cmd.length > 16 ? "..." : ""),
+        messages: [
+          {
+            id: generateUniqueId(),
+            role: "user",
+            content: cmd,
+          },
+        ],
+      };
+
+      setSessions((prev) => [...prev, newSession]);
+      setActiveSessionId(newId);
+      setTimeout(() => executeCommand(cmd, newId), 100);
+    }
+  }, [activeAddress, pendingQuery]);
+
   const filteredSessions = [...sessions]
     .sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0))
     .filter((s) => s.title.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -629,8 +669,21 @@ export default function ChatPage() {
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#09090B] text-white">
 
+      {/* Mobile Sidebar Backdrop */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsSidebarOpen(false)}
+            className="md:hidden fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
+          />
+        )}
+      </AnimatePresence>
+
       <div
-        className={`font-mono text-[11px] h-full shrink-0 flex flex-col bg-[#0C0C0F] relative select-none transition-[width,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${isSidebarOpen
+        className={`font-mono text-sm h-full shrink-0 flex flex-col bg-[#0C0C0F] z-50 select-none transition-[width,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] md:relative absolute inset-y-0 left-0 ${isSidebarOpen
           ? "w-64 opacity-100"
           : "w-0 opacity-0 overflow-hidden"
           }`}
@@ -643,7 +696,7 @@ export default function ChatPage() {
               className="relative z-50 cursor-pointer flex items-center gap-2 text-amber-500 rounded-xl px-2 py-1 btn-tactile"
               title="Start New Session"
             >
-              <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_10px_#f59e0b]"></div>
+              <div className="w-2.5 h-2.5 rounded-full bg-amber-500 "></div>
               <span className="font-mono text-sm font-bold tracking-widest text-amber-500">Hermes</span>
             </div>
             <button
@@ -660,7 +713,7 @@ export default function ChatPage() {
             <button
               id="new-chat-btn"
               onClick={handleNewChat}
-              className="w-full flex items-center gap-2.5 px-3 py-2 text-[11px] font-mono text-zinc-500 hover:text-amber-500 rounded-lg btn-tactile hover:bg-zinc-900/50 text-left cursor-pointer"
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-mono text-zinc-500 hover:text-amber-500 rounded-lg btn-tactile hover:bg-zinc-900/50 text-left cursor-pointer"
             >
               <Plus size={14} className="shrink-0" />
               <span>New chat</span>
@@ -673,7 +726,7 @@ export default function ChatPage() {
                   setSearchQuery("");
                 }
               }}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 text-[11px] font-mono rounded-lg btn-tactile text-left cursor-pointer ${
+              className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-mono rounded-lg btn-tactile text-left cursor-pointer ${
                 showSearch
                   ? "bg-zinc-900/50 text-amber-500"
                   : "text-zinc-500 hover:text-amber-500 hover:bg-zinc-900/50"
@@ -690,7 +743,7 @@ export default function ChatPage() {
                   placeholder="Search sessions..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded px-2.5 py-1.5 text-zinc-300 outline-none font-mono text-[10px] focus:border-[#F59E0B]"
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded px-2.5 py-1.5 text-zinc-300 outline-none font-mono text-sm focus:border-[#F59E0B]"
                   autoFocus
                 />
               </div>
@@ -699,7 +752,7 @@ export default function ChatPage() {
 
           {/* Sessions List */}
           <div className="flex-1 flex flex-col min-h-0">
-            <div className="text-[10px] text-zinc-700 uppercase tracking-widest px-2 mb-1 select-none">
+            <div className="text-sm text-zinc-700 uppercase tracking-widest px-2 mb-1 select-none">
               Recent
             </div>
 
@@ -725,16 +778,16 @@ export default function ChatPage() {
                       }}
                       onBlur={() => handleRename(s.id)}
                       onClick={(e) => e.stopPropagation()}
-                      className="bg-zinc-950 border border-zinc-800 rounded px-1.5 py-0.5 text-zinc-300 w-full outline-none font-mono text-[10px]"
+                      className="bg-zinc-950 border border-zinc-800 rounded px-1.5 py-0.5 text-zinc-300 w-full outline-none font-mono text-sm"
                       autoFocus
                     />
                   ) : (
                     <div className="flex-1 min-w-0 pr-2 flex flex-col justify-center select-none gap-0.5">
                       <div className="flex items-center gap-1.5 w-full">
-                        {s.isPinned && <span className="text-amber-500 shrink-0 font-sans text-[10px]">📌</span>}
+                        {s.isPinned && <span className="text-amber-500 shrink-0 font-sans text-sm">📌</span>}
                         <span className="truncate">{s.title}</span>
                       </div>
-                      {s.timestamp && <span className="text-[9px] text-zinc-600 truncate">{formatDate(s.timestamp)}</span>}
+                      {s.timestamp && <span className="text-xs text-zinc-600 truncate">{formatDate(s.timestamp)}</span>}
                     </div>
                   )}
 
@@ -759,7 +812,7 @@ export default function ChatPage() {
                             exit={{ opacity: 0, scale: 0.95, y: -2 }}
                             transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
                             onClick={(e) => e.stopPropagation()}
-                            className="absolute right-2 mt-1 w-24 bg-zinc-950 border border-zinc-800 rounded shadow-2xl z-50 py-1 flex flex-col font-mono text-[10px] text-left origin-top-right will-change-transform"
+                            className="absolute right-2 mt-1 w-24 bg-zinc-950 border border-zinc-800 rounded shadow-2xl z-50 py-1 flex flex-col font-mono text-sm text-left origin-top-right will-change-transform"
                           >
                             <button
                               onClick={(e) => {
@@ -841,7 +894,7 @@ export default function ChatPage() {
           </div>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex space-x-6 text-[11px] text-white/60 font-medium">
+          <nav className="hidden md:flex space-x-6 text-sm text-white/60 font-medium">
             <Link href="/" className="hover:text-[#F59E0B] transition-colors whitespace-nowrap">Home</Link>
             <Link href="/chat" className="text-[#F59E0B] font-semibold whitespace-nowrap">Chat</Link>
             <Link href="/explorer" className="hover:text-[#F59E0B] transition-colors whitespace-nowrap">Explorer</Link>
@@ -855,11 +908,11 @@ export default function ChatPage() {
                   e.stopPropagation();
                   setShowWalletDropdown(!showWalletDropdown);
                 }}
-                className="flex items-center gap-2 bg-zinc-900/60 hover:bg-zinc-800/40 border border-zinc-800/80 hover:border-amber-500/30 px-3.5 py-1.5 rounded-full text-[11px] text-zinc-400 hover:text-zinc-200 transition-all font-mono btn-tactile cursor-pointer"
+                className="flex items-center gap-2 bg-zinc-900/60 hover:bg-zinc-800/40 border border-zinc-800/80 hover:border-amber-500/30 px-3.5 py-1.5 rounded-full text-sm text-zinc-400 hover:text-zinc-200 transition-all font-mono btn-tactile cursor-pointer"
               >
-                <div className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] "></div>
                 <span>{`${activeAddress.slice(0, 6)}...${activeAddress.slice(-4)}`}</span>
-                <span className="text-[9px] text-zinc-600">▼</span>
+                <span className="text-xs text-zinc-600">▼</span>
               </button>
 
               {/* Wallet Dropdown Panel */}
@@ -894,20 +947,20 @@ export default function ChatPage() {
                         </div>
                         <button
                           onClick={() => handleCopyToClipboard(activeAddress, 'fullAddress')}
-                          className="text-[#F59E0B] hover:text-amber-400 text-[10px] flex items-center gap-1 cursor-pointer font-bold select-none transition-colors"
+                          className="text-[#F59E0B] hover:text-amber-400 text-sm flex items-center gap-1 cursor-pointer font-bold select-none transition-colors"
                         >
                           {copiedText === 'fullAddress' ? 'copied!' : 'copy'}
                         </button>
                       </div>
 
                       {/* Full Address */}
-                      <span className="text-zinc-400 break-all select-all font-mono text-[9px] leading-relaxed">
+                      <span className="text-zinc-400 break-all select-all font-mono text-xs leading-relaxed">
                         {activeAddress}
                       </span>
 
                       {/* POT Balance Section */}
                       <div className="flex flex-col gap-1 mt-1 bg-zinc-950/40 border rounded-xl p-2.5" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                        <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-semibold select-none">POT Balance</span>
+                        <span className="text-xs text-zinc-500 uppercase tracking-wider font-semibold select-none">POT Balance</span>
                         {isFetchingBalance ? (
                           <div className="flex items-center gap-1.5 text-zinc-500 py-0.5">
                             <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping-fast"></div>
@@ -924,21 +977,21 @@ export default function ChatPage() {
                     {/* Receive Section */}
                     <div className="flex flex-col gap-3 pb-3 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
                       <div className="flex flex-col gap-1">
-                        <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-semibold select-none">Receive POT</span>
+                        <span className="text-xs text-zinc-500 uppercase tracking-wider font-semibold select-none">Receive POT</span>
                         <div className="flex items-center justify-between gap-2 bg-zinc-950/40 border rounded-xl p-2 font-mono" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                          <span className="truncate pr-1 text-zinc-400 text-[9px] select-all w-[180px]">
+                          <span className="truncate pr-1 text-zinc-400 text-xs select-all w-[180px]">
                             {activeAddress}
                           </span>
                           <button
                             onClick={() => handleCopyToClipboard(activeAddress, 'receiveAddress')}
-                            className="text-[#F59E0B] hover:text-amber-400 text-[9px] underline cursor-pointer shrink-0 font-bold"
+                            className="text-[#F59E0B] hover:text-amber-400 text-xs underline cursor-pointer shrink-0 font-bold"
                           >
                             {copiedText === 'receiveAddress' ? 'copied!' : 'copy'}
                           </button>
                         </div>
                       </div>
                       
-                      <div className="text-[9px] text-zinc-500 font-mono text-center mt-2">
+                      <div className="text-xs text-zinc-500 font-mono text-center mt-2">
                         Transfers via chat — type: send [amount] POT to [address]
                       </div>
                     </div>
@@ -951,7 +1004,7 @@ export default function ChatPage() {
                         setModalError(null);
                         setShowModal(true);
                       }}
-                      className="w-full bg-red-950/20 hover:bg-red-950/40 border border-red-900/30 hover:border-red-900/60 text-red-500 hover:text-red-400 py-1.5 rounded-lg font-bold uppercase btn-tactile text-[9px] tracking-wide text-center cursor-pointer transition-colors"
+                      className="w-full bg-red-950/20 hover:bg-red-950/40 border border-red-900/30 hover:border-red-900/60 text-red-500 hover:text-red-400 py-1.5 rounded-lg font-bold uppercase btn-tactile text-xs tracking-wide text-center cursor-pointer transition-colors"
                     >
                       Change Address
                     </button>
@@ -985,13 +1038,13 @@ export default function ChatPage() {
                     >
                       {/* Header */}
                       <div className="flex flex-col gap-1 border-b border-zinc-800 pb-2">
-                        <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Current User</span>
+                        <span className="text-sm text-zinc-500 uppercase tracking-wider">Current User</span>
                         <span className="font-bold text-white truncate text-sm">{username}</span>
                       </div>
 
                       {/* Edit Field */}
                       <div className="flex flex-col gap-1.5">
-                        <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Rename</span>
+                        <span className="text-sm text-zinc-500 uppercase tracking-wider">Rename</span>
                         <input
                           type="text"
                           value={editUsernameValue}
@@ -1011,7 +1064,7 @@ export default function ChatPage() {
                             setShowProfileDropdown(false);
                           }
                         }}
-                        className="bg-[#F59E0B]/10 hover:bg-[#F59E0B]/20 text-[#F59E0B] py-1.5 rounded font-bold uppercase btn-tactile text-[10px] tracking-wide text-center"
+                        className="bg-[#F59E0B]/10 hover:bg-[#F59E0B]/20 text-[#F59E0B] py-1.5 rounded font-bold uppercase btn-tactile text-sm tracking-wide text-center"
                       >
                         Save
                       </button>
@@ -1026,7 +1079,7 @@ export default function ChatPage() {
                           setModalError(null);
                           setShowModal(true);
                         }}
-                        className="hover:bg-zinc-900 text-zinc-400 py-1.5 rounded font-bold uppercase btn-tactile text-[10px] tracking-wide text-center border border-transparent hover:border-zinc-800"
+                        className="hover:bg-zinc-900 text-zinc-400 py-1.5 rounded font-bold uppercase btn-tactile text-sm tracking-wide text-center border border-transparent hover:border-zinc-800"
                       >
                         Change Address
                       </button>
@@ -1088,7 +1141,7 @@ export default function ChatPage() {
                     type="button"
                     onClick={() => setInput(prompt)}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setInput(prompt); } }}
-                    className="bg-zinc-950/60 hover:bg-zinc-900/40 border border-zinc-900 hover:border-amber-500/30 rounded-xl p-4 btn-tactile text-left text-zinc-400 hover:text-zinc-200 cursor-pointer font-mono text-[11px] leading-relaxed flex flex-col justify-between focus:outline-none focus:ring-1 focus:ring-amber-500/50"
+                    className="bg-zinc-950/60 hover:bg-zinc-900/40 border border-zinc-900 hover:border-amber-500/30 rounded-xl p-4 btn-tactile text-left text-zinc-400 hover:text-zinc-200 cursor-pointer font-mono text-sm leading-relaxed flex flex-col justify-between focus:outline-none focus:ring-1 focus:ring-amber-500/50"
                     aria-label={`Ask: ${prompt}`}
                   >
                     <span>{prompt}</span>
@@ -1115,8 +1168,8 @@ export default function ChatPage() {
                 if (msg.isSystem) {
                   return (
                     <div key={msg.id} className="flex flex-col space-y-1">
-                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
-                      <div className="text-zinc-500 font-mono text-[11px] pl-3 md:pl-4 border-l border-zinc-800/40 py-0.5 select-text">
+                      <span className="text-amber-500/60 text-sm select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
+                      <div className="text-zinc-500 font-mono text-sm pl-3 md:pl-4 border-l border-zinc-800/40 py-0.5 select-text">
                         {msg.content}
                       </div>
                     </div>
@@ -1126,7 +1179,7 @@ export default function ChatPage() {
                 if (msg.isError) {
                   return (
                     <div key={msg.id} className="flex flex-col space-y-1" role="alert">
-                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
+                      <span className="text-amber-500/60 text-sm select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
                       <div className="text-amber-500 font-mono text-xs pl-3 md:pl-4 border-l border-red-500/30 py-1 font-bold select-text flex items-start gap-1.5">
                         <span aria-hidden="true" className="mt-px shrink-0 text-red-400">⚠</span>
                         <span>{msg.content}</span>
@@ -1138,7 +1191,7 @@ export default function ChatPage() {
                 if (msg.isRemedial) {
                   return (
                     <div key={msg.id} className="flex flex-col space-y-1" role="status">
-                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
+                      <span className="text-amber-500/60 text-sm select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
                       <div className="text-amber-500 font-mono text-xs pl-3 md:pl-4 border-l border-zinc-800/40 py-1 select-text">
                         {msg.content}
                       </div>
@@ -1149,7 +1202,7 @@ export default function ChatPage() {
                 if (msg.isSuccess) {
                   return (
                     <div key={msg.id} className="flex flex-col space-y-1">
-                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
+                      <span className="text-amber-500/60 text-sm select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
                       <div className="text-green-400 font-mono text-xs pl-3 md:pl-4 border-l border-zinc-800/40 py-1 font-bold select-text">
                         {msg.content}
                       </div>
@@ -1169,7 +1222,7 @@ export default function ChatPage() {
 
                 return (
                   <div key={msg.id} className="flex flex-col items-start w-full space-y-1">
-                    <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
+                    <span className="text-amber-500/60 text-sm select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
                     <div className="text-zinc-300 leading-relaxed pl-3 md:pl-4 border-l border-zinc-800/40 break-words text-left max-w-[85%] select-text">
                       {formatMessageContent(msg.content)}
                     </div>
@@ -1223,7 +1276,7 @@ export default function ChatPage() {
               />
             </div>
 
-            <p className="text-center text-[11px] text-zinc-600 mt-2">Hermes is an AI and can make mistakes.</p>
+            <p className="text-center text-sm text-zinc-600 mt-2">Hermes is an AI and can make mistakes.</p>
 
           </div>
         </div>
@@ -1262,7 +1315,7 @@ export default function ChatPage() {
 
               <div className="flex flex-col gap-1">
                 <span className="text-[#F59E0B] font-bold text-sm tracking-wide uppercase">Portaldot Account</span>
-                <p className="text-zinc-400 text-[11px] leading-relaxed">
+                <p className="text-zinc-400 text-sm leading-relaxed">
                   Enter your Portaldot address to get started. History and sessions will be namespaced to this address.
                 </p>
               </div>
@@ -1297,13 +1350,13 @@ export default function ChatPage() {
                     autoFocus
                   />
                   {modalError && (
-                    <div id="modal-error" role="alert" className="flex items-start gap-1.5 text-red-400 text-[10px] leading-relaxed mt-0.5">
+                    <div id="modal-error" role="alert" className="flex items-start gap-1.5 text-red-400 text-sm leading-relaxed mt-0.5">
                       <span aria-hidden="true" className="mt-px shrink-0">⚠</span>
                       <span>{modalError}</span>
                     </div>
                   )}
                   
-                  <span className="text-zinc-500 text-[10px] leading-relaxed mt-1">
+                  <span className="text-zinc-500 text-sm leading-relaxed mt-1">
                     A Portaldot address is a unique identifier for your account on the network. It starts with the number 5 and is 47–48 characters long.
                   </span>
 
@@ -1312,7 +1365,7 @@ export default function ChatPage() {
                       type="button"
                       onClick={handleGenerateAddress}
                       disabled={isGeneratingWallet}
-                      className="text-amber-500 hover:text-amber-400 text-[10px] underline text-left cursor-pointer transition-colors"
+                      className="text-amber-500 hover:text-amber-400 text-sm underline text-left cursor-pointer transition-colors"
                     >
                       {isGeneratingWallet ? "Generating..." : "Don't have a Portaldot address? Generate one"}
                     </button>
@@ -1320,7 +1373,7 @@ export default function ChatPage() {
                 </div>
 
                 {showWarningBanner && (
-                  <div className="bg-amber-500/10 border border-amber-500/30 text-amber-500 p-2.5 rounded-lg text-[10px] leading-normal font-sans">
+                  <div className="bg-amber-500/10 border border-amber-500/30 text-amber-500 p-2.5 rounded-lg text-sm leading-normal font-sans">
                     ⚠️ Your mnemonic has been saved to the server keystore. Write it down before continuing.
                   </div>
                 )}
