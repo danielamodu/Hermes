@@ -181,6 +181,17 @@ Expected JSON structure:
                 "telemetry": telemetry
             }
 
+
+@app.get("/status")
+async def status_endpoint():
+    try:
+        res = chain_client.get_chain_info({})
+        if res.get("status") == "success":
+            return {"success": True, "block_number": res["data"]["latest_block_number"]}
+        return {"success": False}
+    except Exception:
+        return {"success": False}
+
 @app.post("/execute")
 async def execute_endpoint(request: ExecuteRequest):
     if not request.prompt.strip():

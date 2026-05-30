@@ -921,69 +921,8 @@ export default function ChatPage() {
                       </div>
                     </div>
 
-                    {/* Actions Section */}
+                    {/* Receive Section */}
                     <div className="flex flex-col gap-3 pb-3 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                      {/* Send POT Toggle trigger */}
-                      <button
-                        onClick={() => {
-                          setShowSendForm(!showSendForm);
-                          setSendError(null);
-                          setSendSuccessData(null);
-                        }}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-[10px] font-bold uppercase transition-all btn-tactile cursor-pointer border ${
-                          showSendForm 
-                            ? "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20" 
-                            : "bg-[#1A1A1E] text-zinc-300 border-transparent hover:border-zinc-800"
-                        }`}
-                      >
-                        <span>Send POT</span>
-                        <span>{showSendForm ? "▲" : "▼"}</span>
-                      </button>
-
-                      {/* Inline Send POT Form */}
-                      {showSendForm && (
-                        <form onSubmit={handleSendPOT} className="flex flex-col gap-2 bg-zinc-950/40 p-2.5 rounded-xl border border-white/5">
-                          <input
-                            type="text"
-                            placeholder="Recipient Address"
-                            value={sendRecipient}
-                            onChange={(e) => setSendRecipient(e.target.value)}
-                            className="bg-zinc-900/60 border border-zinc-800 rounded px-2 py-1.5 text-[9px] text-zinc-300 outline-none focus:border-[#F59E0B] w-full font-mono placeholder-zinc-600"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Amount (POT)"
-                            value={sendAmount}
-                            onChange={(e) => setSendAmount(e.target.value)}
-                            className="bg-zinc-900/60 border border-zinc-800 rounded px-2 py-1.5 text-[9px] text-zinc-300 outline-none focus:border-[#F59E0B] w-full font-mono placeholder-zinc-600"
-                          />
-
-                          {sendError && (
-                            <div role="alert" className="flex items-start gap-1 text-red-400 text-[9px] leading-relaxed font-mono">
-                              <span aria-hidden="true" className="shrink-0">⚠</span>
-                              <span>{sendError}</span>
-                            </div>
-                          )}
-
-                          {sendSuccessData && (
-                            <div className="bg-green-500/10 border border-green-500/20 text-green-400 p-2 rounded-lg text-[9px] leading-relaxed flex flex-col gap-0.5 font-mono">
-                              <span className="font-bold select-none text-green-400">[✓] Send Success</span>
-                              <span className="break-all select-all font-mono">Hash: {sendSuccessData.txHash}</span>
-                              {sendSuccessData.fee && <span className="font-mono">Fee: {sendSuccessData.fee}</span>}
-                            </div>
-                          )}
-
-                          <button
-                            type="submit"
-                            disabled={isSendingPOT || !sendRecipient.trim() || !sendAmount.trim()}
-                            className="w-full bg-[#F59E0B]/10 hover:bg-[#F59E0B]/20 disabled:bg-zinc-900/50 text-[#F59E0B] disabled:text-zinc-600 py-1.5 rounded font-bold uppercase btn-tactile text-[9px] tracking-wide text-center cursor-pointer transition-colors"
-                          >
-                            {isSendingPOT ? "Sending..." : "Confirm Send"}
-                          </button>
-                        </form>
-                      )}
-
-                      {/* Receive box */}
                       <div className="flex flex-col gap-1">
                         <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-semibold select-none">Receive POT</span>
                         <div className="flex items-center justify-between gap-2 bg-zinc-950/40 border rounded-xl p-2 font-mono" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
@@ -998,36 +937,10 @@ export default function ChatPage() {
                           </button>
                         </div>
                       </div>
-                    </div>
-
-                    {/* Recent Transactions (last 3 txs) */}
-                    <div className="flex flex-col gap-2 pb-3 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                      <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-semibold select-none">Recent Transactions</span>
-                      {recentTxs.length === 0 ? (
-                        <span className="text-zinc-600 text-[9px] italic">No recent transfers.</span>
-                      ) : (
-                        <div className="flex flex-col gap-2.5 max-h-36 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
-                          {recentTxs.slice(0, 3).map((tx, idx) => (
-                            <div key={idx} className="flex flex-col gap-1 bg-zinc-950/40 border border-white/5 p-2 rounded-lg text-[9px] font-mono leading-normal select-text">
-                              <div className="flex justify-between items-center text-zinc-400 font-semibold select-none">
-                                <span className="text-[#F59E0B]">{tx.amount} POT → {tx.recipient}</span>
-                                <span className="text-zinc-600 text-[8px]">
-                                  {formatDate(tx.timestamp)}
-                                </span>
-                              </div>
-                              <div className="text-zinc-600 text-[8px] truncate flex justify-between items-center gap-1 font-mono mt-0.5">
-                                <span className="truncate text-zinc-500">Hash: {tx.hash}</span>
-                                <button
-                                  onClick={() => handleCopyToClipboard(tx.hash, `txHash_${idx}`)}
-                                  className="text-[#F59E0B] hover:text-amber-400 text-[7px] underline shrink-0 cursor-pointer font-bold select-none"
-                                >
-                                  {copiedText === `txHash_${idx}` ? 'copied!' : 'copy'}
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                      
+                      <div className="text-[9px] text-zinc-500 font-mono text-center mt-2">
+                        Transfers via chat — type: send [amount] POT to [address]
+                      </div>
                     </div>
 
                     {/* Footer Section */}
