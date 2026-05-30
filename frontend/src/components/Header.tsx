@@ -12,22 +12,15 @@ export default function Header() {
   useEffect(() => {
     const fetchBlockHeight = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/chat`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ message: "what is the current block height?" })
-        });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/status`);
         if (res.ok) {
           const data = await res.json();
-          const blockNum = data.execution_result?.data?.latest_block_number;
-          if (blockNum) {
-            setBlockHeight(blockNum);
+          if (data.success && data.block_number) {
+            setBlockHeight(data.block_number);
           }
         }
       } catch (err) {
-        console.error("Failed to fetch block height", err);
+        // Failed to fetch block height - ignoring to prevent console spam
       }
     };
 

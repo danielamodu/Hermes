@@ -213,12 +213,12 @@ export default function LandingPage() {
           animation: blink 1s step-start infinite;
         }
         @keyframes customFadeIn {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
         }
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(4px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
         }
         .animate-fade-in {
           animation: fadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -235,10 +235,10 @@ export default function LandingPage() {
           animation: customFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .animate-float-infinite {
-          animation: customFloat 6s ease-in-out infinite;
+          animation: customFloat 6s ease-out infinite;
         }
         .animate-breathe-glow {
-          animation: breathe 8s ease-in-out infinite alternate;
+          animation: breathe 8s ease-out infinite alternate;
         }
       `}</style>
 
@@ -250,7 +250,7 @@ export default function LandingPage() {
       {/* Mouse-tracking Radial Spotlight Layer */}
       <div
         ref={spotlightRef}
-        className="pointer-events-none fixed inset-0 -z-10 transition-opacity duration-300"
+        className="pointer-events-none fixed inset-0 -z-10 transition-opacity duration-200"
         style={{
           background: `radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(245, 158, 11, 0.03), transparent 80%)`
         }}
@@ -291,7 +291,7 @@ export default function LandingPage() {
         {/* Minimal CTA button below */}
         <Link
           href="/chat"
-          className="mt-10 md:mt-12 inline-flex items-center justify-center px-8 py-3.5 border border-[#F59E0B] text-[#F59E0B] hover:bg-[#F59E0B] hover:text-[#000000] font-mono text-xs tracking-[0.15em] uppercase font-bold transition-all duration-300 btn-tactile rounded-none animate-fade-in-once [animation-delay:600ms]"
+          className="mt-10 md:mt-12 inline-flex items-center justify-center px-8 py-3.5 border border-[#F59E0B] text-[#F59E0B] hover:bg-[#F59E0B] hover:text-[#000000] font-mono text-xs tracking-[0.15em] uppercase font-bold transition-all duration-200 btn-tactile rounded-none animate-fade-in-once [animation-delay:600ms]"
         >
           Launch Hermes →
         </Link>
@@ -324,7 +324,7 @@ export default function LandingPage() {
           onClick={() => {
             if (stage === 5) inputRef.current?.focus();
           }}
-          className={`w-full max-w-4xl bg-[#111114] border ${isFocused ? 'border-[#F59E0B]/50 shadow-[0_0_60px_rgba(245,158,11,0.12)]' : 'border-white/[0.06] shadow-[0_0_50px_rgba(0,0,0,0.6)]'} rounded-none overflow-hidden transition-all duration-300 cursor-text focus:outline-none focus:ring-1 focus:ring-[#F59E0B]`}
+          className={`w-full max-w-4xl bg-[#111114] border ${isFocused ? 'border-[#F59E0B]/50 shadow-[0_0_60px_rgba(245,158,11,0.12)]' : 'border-white/[0.06] shadow-[0_0_50px_rgba(0,0,0,0.6)]'} rounded-none overflow-hidden transition-all duration-200 cursor-text focus:outline-none focus:ring-1 focus:ring-[#F59E0B]`}
         >
           {/* Terminal Window Header */}
           <div className="h-10 bg-black/60 border-b border-white/[0.06] px-4 flex items-center justify-between">
@@ -481,7 +481,7 @@ export default function LandingPage() {
         {/* 2-Column Minimal Side-by-Side Comparison */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch w-full">
           {/* Left Column: Substrate SDK Boilerplate */}
-          <div className="flex flex-col bg-[#111114] border border-white/[0.06] rounded-none overflow-hidden hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.04)] transition-all duration-300">
+          <div className="flex flex-col bg-[#111114] border border-white/[0.06] rounded-none overflow-hidden hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.04)] transition-all duration-200">
             <div className="h-10 bg-black/60 border-b border-white/[0.06] px-4 flex items-center justify-between">
               <span className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest font-bold">substrate_query.py</span>
               <span className="text-[10px] text-red-400 font-bold font-mono bg-red-950/20 border border-red-900/40 px-2 py-0.5 rounded-none uppercase">
@@ -494,7 +494,7 @@ export default function LandingPage() {
           </div>
 
           {/* Right Column: Clean single-line intent */}
-          <div className="flex flex-col justify-between p-6 md:p-8 bg-[#111114] border border-white/[0.06] hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] rounded-none h-full transition-all duration-300 relative overflow-hidden group">
+          <div className="flex flex-col justify-between p-6 md:p-8 bg-[#111114] border border-white/[0.06] hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] rounded-none h-full transition-all duration-200 relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#F59E0B]/5 to-transparent pointer-events-none"></div>
 
             <div className="space-y-6">
@@ -507,7 +507,7 @@ export default function LandingPage() {
 
               <div className="space-y-4">
                 <div className="text-xs text-zinc-500 uppercase tracking-widest font-bold font-mono">Natural Language Query</div>
-                <div className="bg-black/60 border border-white/[0.06] p-5 rounded-none flex items-center space-x-3 shadow-inner relative group-hover:border-[#F59E0B]/20 transition-colors duration-300">
+                <div className="bg-black/60 border border-white/[0.06] p-5 rounded-none flex items-center space-x-3 shadow-inner relative group-hover:border-[#F59E0B]/20 transition-colors duration-200">
                   <span className="text-[#F59E0B] font-black text-lg select-none">&gt;</span>
                   <span className="text-[#F5F0E8] text-sm md:text-base font-bold font-sans tracking-wide leading-relaxed">
                     show me total POT supply and current block height
@@ -522,7 +522,7 @@ export default function LandingPage() {
                 </div>
                 <div className="h-2.5 w-full bg-black border border-white/[0.06] rounded-none overflow-hidden p-0.5">
                   <div
-                    className="h-full bg-gradient-to-r from-[#F59E0B] via-amber-500 to-[#F59E0B] shadow-[0_0_15px_rgba(245,158,11,0.5)] rounded-none transition-[width] duration-600 ease-out"
+                    className="h-full bg-gradient-to-r from-[#F59E0B] via-amber-500 to-[#F59E0B] shadow-[0_0_15px_rgba(245,158,11,0.5)] rounded-none transition-[width] duration-300 ease-out"
                     style={{ width: `${progress}%` }}
                   />
                 </div>

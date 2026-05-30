@@ -630,7 +630,7 @@ export default function ChatPage() {
     <div className="flex h-screen w-screen overflow-hidden bg-[#09090B] text-white">
 
       <div
-        className={`font-mono text-[11px] h-full shrink-0 flex flex-col bg-[#0C0C0F] relative select-none transition-[width,opacity] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isSidebarOpen
+        className={`font-mono text-[11px] h-full shrink-0 flex flex-col bg-[#0C0C0F] relative select-none transition-[width,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${isSidebarOpen
           ? "w-64 opacity-100"
           : "w-0 opacity-0 overflow-hidden"
           }`}
