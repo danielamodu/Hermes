@@ -299,7 +299,7 @@ export default function LandingPage() {
 
       {/* --- PLAYGROUND TERMINAL SECTION --- */}
       <section className="py-20 md:py-40 max-w-5xl mx-auto w-full px-4 md:px-8 flex flex-col items-center relative z-10">
-        <div className="w-full max-w-4xl flex flex-col space-y-4 mb-16 text-center md:text-left md:items-start">
+        <div className="w-full max-w-4xl flex flex-col space-y-4 mb-16 text-center items-center mx-auto">
           <div className="font-mono text-xs tracking-[0.25em] text-[#F59E0B] uppercase">
             [ PLAYGROUND ]
           </div>
@@ -468,7 +468,7 @@ export default function LandingPage() {
 
       {/* --- DX COMPARISON SECTION --- */}
       <section className="py-20 md:py-40 max-w-5xl mx-auto w-full px-4 md:px-8 relative z-10">
-        <div className="flex flex-col space-y-4 mb-16 text-center md:text-left md:items-start">
+        <div className="w-full max-w-4xl flex flex-col space-y-4 mb-16 text-center items-center mx-auto">
           <div className="font-mono text-xs tracking-[0.25em] text-[#F59E0B] uppercase">[ SIMPLICITY ]</div>
           <h2 className="font-sans font-bold text-3xl md:text-[40px] tracking-tight text-[#F5F0E8] leading-tight">
             Ditch the SDK. <span className="text-[#F59E0B]">Just Ask.</span>
@@ -539,7 +539,7 @@ export default function LandingPage() {
 
       {/* --- CAPABILITIES MATRIX SECTION --- */}
       <section className="py-20 md:py-40 max-w-5xl mx-auto w-full px-4 md:px-8 relative z-10">
-        <div className="flex flex-col space-y-4 mb-16 text-center md:text-left md:items-start">
+        <div className="w-full max-w-4xl flex flex-col space-y-4 mb-16 text-center items-center mx-auto">
           <div className="font-mono text-xs tracking-[0.25em] text-[#F59E0B] uppercase">[ CAPABILITIES ]</div>
           <h2 className="font-sans font-bold text-3xl md:text-[40px] tracking-tight text-[#F5F0E8] leading-tight">
             Agent <span className="text-[#F59E0B]">Capabilities</span>
@@ -613,7 +613,7 @@ export default function LandingPage() {
 
       {/* --- WORKFLOW SECTION --- */}
       <section className="py-20 md:py-40 max-w-5xl mx-auto w-full px-4 md:px-8 relative z-10">
-        <div className="flex flex-col space-y-4 mb-16 text-center md:text-left md:items-start">
+        <div className="w-full max-w-4xl flex flex-col space-y-4 mb-16 text-center items-center mx-auto">
           <div className="font-mono text-xs tracking-[0.25em] text-[#F59E0B] uppercase">[ WORKFLOW ]</div>
           <h2 className="font-sans font-bold text-3xl md:text-[40px] tracking-tight text-[#F5F0E8] leading-tight">
             How It <span className="text-[#F59E0B]">Works</span>
