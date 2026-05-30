@@ -18,10 +18,14 @@ app = FastAPI(title="Hermes API", description="AI Agent for Portaldot Blockchain
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[
+        'http://localhost:3000',
+        'https://hermesxbt.vercel.app',
+        '*'
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
 # Initialize our components

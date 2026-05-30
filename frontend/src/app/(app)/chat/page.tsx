@@ -75,7 +75,7 @@ export default function ChatPage() {
     setIsGeneratingWallet(true);
     setModalError(null);
     try {
-      const res = await fetch("http://localhost:8000/chat", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: "create a new wallet" }),
@@ -88,10 +88,10 @@ export default function ChatPage() {
         setModalInput(address);
         setShowWarningBanner(true);
       } else {
-        setModalError("Could not extract address from response.");
+        setModalError("Address generation succeeded but no address was returned. Please try again.");
       }
     } catch (err: any) {
-      setModalError("Error generating wallet: " + err.message);
+      setModalError("Could not connect to the Portaldot node. Check that the backend is running and try again.");
     } finally {
       setIsGeneratingWallet(false);
     }
@@ -126,7 +126,7 @@ export default function ChatPage() {
     setIsFetchingBalance(true);
     setPotBalance(null);
     try {
-      const response = await fetch("http://localhost:8000/chat", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: `check balance of ${addr}` }),
@@ -185,7 +185,7 @@ export default function ChatPage() {
     setSendError(null);
 
     try {
-      const response = await fetch("http://localhost:8000/chat", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: `send ${sendAmount} POT to ${sendRecipient}` }),
@@ -215,7 +215,7 @@ export default function ChatPage() {
         setSendError(reply || "Transfer failed.");
       }
     } catch (err: any) {
-      setSendError(err.message || "Failed to send POT.");
+      setSendError("Transfer failed. Check that the recipient address is valid and your balance is sufficient.");
     } finally {
       setIsSendingPOT(false);
     }
@@ -421,7 +421,7 @@ export default function ChatPage() {
         )
       );
 
-      const response = await fetch("http://localhost:8000/chat", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: cmd }),
@@ -811,7 +811,7 @@ export default function ChatPage() {
                       <div className="flex items-center justify-between select-none">
                         <div className="flex items-center gap-2">
                           <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
+                            <span className="animate-ping-fast absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
                           </span>
                           <span style={{ fontFamily: "var(--font-syne)" }} className="text-white text-xs font-bold tracking-wider">
@@ -836,7 +836,7 @@ export default function ChatPage() {
                         <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-semibold select-none">POT Balance</span>
                         {isFetchingBalance ? (
                           <div className="flex items-center gap-1.5 text-zinc-500 py-0.5">
-                            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></div>
+                            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping-fast"></div>
                             <span>Loading balance...</span>
                           </div>
                         ) : (
@@ -885,7 +885,10 @@ export default function ChatPage() {
                           />
 
                           {sendError && (
-                            <span className="text-red-500 text-[9px] leading-relaxed font-mono">{sendError}</span>
+                            <div role="alert" className="flex items-start gap-1 text-red-400 text-[9px] leading-relaxed font-mono">
+                              <span aria-hidden="true" className="shrink-0">⚠</span>
+                              <span>{sendError}</span>
+                            </div>
                           )}
 
                           {sendSuccessData && (
@@ -1055,7 +1058,7 @@ export default function ChatPage() {
             <div className="flex-1 flex flex-col items-center justify-center text-center select-none my-auto max-w-2xl mx-auto px-4 py-8 space-y-6">
               {/* Pulsing Dot */}
               <div className="flex items-center justify-center">
-                <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_12px_#f59e0b] animate-ping duration-1000"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_12px_#f59e0b] animate-ping-fast"></div>
               </div>
 
               {/* Greeting */}
@@ -1093,13 +1096,16 @@ export default function ChatPage() {
                   "What is LAO NPoS consensus in Portaldot?",
                   "What is the current POT transfer fee?",
                 ].map((prompt, idx) => (
-                  <div
+                  <button
                     key={idx}
+                    type="button"
                     onClick={() => setInput(prompt)}
-                    className="bg-zinc-950/60 hover:bg-zinc-900/40 border border-zinc-900 hover:border-amber-500/30 rounded-xl p-4 btn-tactile text-left text-zinc-400 hover:text-zinc-200 cursor-pointer font-mono text-[11px] leading-relaxed flex flex-col justify-between"
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setInput(prompt); } }}
+                    className="bg-zinc-950/60 hover:bg-zinc-900/40 border border-zinc-900 hover:border-amber-500/30 rounded-xl p-4 btn-tactile text-left text-zinc-400 hover:text-zinc-200 cursor-pointer font-mono text-[11px] leading-relaxed flex flex-col justify-between focus:outline-none focus:ring-1 focus:ring-amber-500/50"
+                    aria-label={`Ask: ${prompt}`}
                   >
                     <span>{prompt}</span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -1111,9 +1117,9 @@ export default function ChatPage() {
                   return (
                     <div key={msg.id} className="flex justify-start py-2 select-none w-full">
                       <div className="flex items-center space-x-1.5 bg-zinc-900/30 px-4 py-2 rounded-full border border-zinc-800/40">
-                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce [animation-delay:-0.3s]"></div>
-                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce [animation-delay:-0.15s]"></div>
-                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce"></div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-thinking-dot" style={{animationDelay:'-0.3s'}}></div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-thinking-dot" style={{animationDelay:'-0.15s'}}></div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-thinking-dot"></div>
                       </div>
                     </div>
                   );
@@ -1122,7 +1128,7 @@ export default function ChatPage() {
                 if (msg.isSystem) {
                   return (
                     <div key={msg.id} className="flex flex-col space-y-1">
-                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold">● hermes</span>
+                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
                       <div className="text-zinc-500 font-mono text-[11px] pl-3 md:pl-4 border-l border-zinc-800/40 py-0.5 select-text">
                         {msg.content}
                       </div>
@@ -1132,10 +1138,11 @@ export default function ChatPage() {
 
                 if (msg.isError) {
                   return (
-                    <div key={msg.id} className="flex flex-col space-y-1">
-                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold">● hermes</span>
-                      <div className="text-amber-500 font-mono text-xs pl-3 md:pl-4 border-l border-zinc-800/40 py-1 font-bold select-text">
-                        {msg.content}
+                    <div key={msg.id} className="flex flex-col space-y-1" role="alert">
+                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
+                      <div className="text-amber-500 font-mono text-xs pl-3 md:pl-4 border-l border-red-500/30 py-1 font-bold select-text flex items-start gap-1.5">
+                        <span aria-hidden="true" className="mt-px shrink-0 text-red-400">⚠</span>
+                        <span>{msg.content}</span>
                       </div>
                     </div>
                   );
@@ -1143,8 +1150,8 @@ export default function ChatPage() {
 
                 if (msg.isRemedial) {
                   return (
-                    <div key={msg.id} className="flex flex-col space-y-1">
-                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold">● hermes</span>
+                    <div key={msg.id} className="flex flex-col space-y-1" role="status">
+                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
                       <div className="text-amber-500 font-mono text-xs pl-3 md:pl-4 border-l border-zinc-800/40 py-1 select-text">
                         {msg.content}
                       </div>
@@ -1155,7 +1162,7 @@ export default function ChatPage() {
                 if (msg.isSuccess) {
                   return (
                     <div key={msg.id} className="flex flex-col space-y-1">
-                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold">● hermes</span>
+                      <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
                       <div className="text-green-400 font-mono text-xs pl-3 md:pl-4 border-l border-zinc-800/40 py-1 font-bold select-text">
                         {msg.content}
                       </div>
@@ -1175,7 +1182,7 @@ export default function ChatPage() {
 
                 return (
                   <div key={msg.id} className="flex flex-col items-start w-full space-y-1">
-                    <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold">● hermes</span>
+                    <span className="text-amber-500/60 text-[10px] select-none font-mono font-semibold" aria-label="Hermes">● hermes</span>
                     <div className="text-zinc-300 leading-relaxed pl-3 md:pl-4 border-l border-zinc-800/40 break-words text-left max-w-[85%] select-text">
                       {formatMessageContent(msg.content)}
                     </div>
@@ -1242,6 +1249,11 @@ export default function ChatPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-md z-[9999]"
+            onKeyDown={(e) => { if (e.key === 'Escape' && activeAddress) setShowModal(false); }}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Portaldot account setup"
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0, y: 10 }}
@@ -1293,10 +1305,15 @@ export default function ChatPage() {
                       if (modalError) setModalError(null);
                     }}
                     className="bg-zinc-950/80 border border-zinc-800 rounded-lg px-3 py-2.5 outline-none focus:border-[#F59E0B] text-zinc-200 transition-all font-sans text-xs w-full placeholder-zinc-700 font-mono"
+                    aria-label="Portaldot ss58 address"
+                    aria-describedby={modalError ? "modal-error" : undefined}
                     autoFocus
                   />
                   {modalError && (
-                    <span className="text-red-500 text-[10px] leading-relaxed mt-0.5">{modalError}</span>
+                    <div id="modal-error" role="alert" className="flex items-start gap-1.5 text-red-400 text-[10px] leading-relaxed mt-0.5">
+                      <span aria-hidden="true" className="mt-px shrink-0">⚠</span>
+                      <span>{modalError}</span>
+                    </div>
                   )}
                   
                   <div className="mt-1">

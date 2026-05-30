@@ -3,11 +3,9 @@
 import BackgroundEffects from '@/components/BackgroundEffects';
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { ContainerScroll } from "@/components/ui/container-scroll-animation";
-
 
 const CodeBoilerplate = () => (
-  <pre className="text-[11px] leading-relaxed text-zinc-400 font-mono overflow-x-auto p-4 bg-[#030303]/90 border border-zinc-800/80 rounded-lg h-full max-h-[350px] overflow-y-auto">
+  <pre className="text-[11px] md:text-xs leading-relaxed text-zinc-400 font-mono overflow-x-auto p-4 bg-[#111114]/80 border border-white/[0.06] rounded-none h-full max-h-[350px] overflow-y-auto">
     <code>
       <span className="text-zinc-600"># Imports</span>{"\n"}
       <span className="text-purple-400">from</span> substrateinterface <span className="text-purple-400">import</span> <span className="text-amber-400">SubstrateInterface</span>{"\n"}
@@ -200,33 +198,12 @@ export default function LandingPage() {
       }
     }, 400);
   };
+
   return (
-    <div className="flex flex-col min-h-screen bg-background relative overflow-x-hidden font-mono w-full pt-24">
+    <div className="flex flex-col min-h-screen bg-[#0C0C0F] relative overflow-x-hidden font-mono w-full">
       <BackgroundEffects />
 
-      {/* Centered Breathing Amber Glow Behind Hero */}
-      <div
-        className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,1),transparent_60%)] -z-20 animate-breathe-glow"
-      />
-
-      {/* Background Retro Grid / Dot Matrix Pattern Layer */}
-      <div
-        className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(rgba(245,158,11,0.04)_1px,transparent_1px)] [background-size:24px_24px]"
-      />
-      <div
-        className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(to_right,rgba(255,255,255,0.012)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.012)_1px,transparent_1px)] [background-size:40px_40px]"
-      />
-
-      {/* Mouse-tracking Radial Spotlight Layer */}
-      <div
-        ref={spotlightRef}
-        className="pointer-events-none fixed inset-0 -z-10 transition-opacity duration-300"
-        style={{
-          background: `radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(245, 158, 11, 0.04), transparent 80%)`
-        }}
-      />
-
-      {/* Global CSS Style tag for cursor blink, fade in, float, and breathing glow */}
+      {/* Global CSS Style tag for cursor blink, fade in, and custom animations */}
       <style>{`
         @keyframes blink {
           0%, 100% { opacity: 1; }
@@ -236,11 +213,11 @@ export default function LandingPage() {
           animation: blink 1s step-start infinite;
         }
         @keyframes customFadeIn {
-          from { opacity: 0; transform: translateY(4px); }
+          from { opacity: 0; transform: translateY(8px); }
           to { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(2px); }
+          from { opacity: 0; transform: translateY(4px); }
           to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-in {
@@ -248,11 +225,11 @@ export default function LandingPage() {
         }
         @keyframes customFloat {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-3px); }
+          50% { transform: translateY(-4px); }
         }
         @keyframes breathe {
-          from { opacity: 0.03; }
-          to { opacity: 0.08; }
+          from { opacity: 0.02; }
+          to { opacity: 0.06; }
         }
         .animate-fade-in-once {
           animation: customFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -265,26 +242,73 @@ export default function LandingPage() {
         }
       `}</style>
 
-      {/* Terminal Hero Section */}
-      <section className="flex flex-col items-center justify-center space-y-6 md:space-y-8 max-w-5xl mx-auto w-full px-4 md:px-8 pt-[140px] pb-[80px]">
-        <div className="inline-flex items-center space-x-2 border border-accent/20 bg-accent/5 px-3 py-1 rounded-full text-xs text-accent tracking-widest uppercase">
-          <span>v1.0.0 Active</span>
+      {/* Breathing Amber Glow Layer (Page Level) */}
+      <div
+        className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.06),transparent_70%)] -z-20 animate-breathe-glow"
+      />
+
+      {/* Mouse-tracking Radial Spotlight Layer */}
+      <div
+        ref={spotlightRef}
+        className="pointer-events-none fixed inset-0 -z-10 transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(245, 158, 11, 0.03), transparent 80%)`
+        }}
+      />
+
+      {/* --- HERO SECTION --- */}
+      <section className="h-screen w-full bg-[#000000] flex flex-col justify-center items-center relative overflow-hidden px-4 md:px-8 select-none z-10">
+        {/* Ambient background clean fade */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-[#0C0C0F] pointer-events-none" />
+
+        {/* Small caps letter-spaced mono label */}
+        <div className="font-mono text-xs md:text-sm tracking-[0.3em] text-[#F59E0B] uppercase font-bold mb-6 animate-fade-in-once">
+          [ PORTALDOT_AGENT ]
         </div>
 
-        {/* Hero Text Section */}
-        <div className="flex flex-col items-center space-y-6 max-w-2xl w-full text-center">
-          <h1 className="font-sans font-bold text-4xl md:text-5xl text-white tracking-tight leading-tight">
-            The First AI Agent for Portaldot
-          </h1>
-          <p className="font-mono text-sm text-[#A09888] max-w-[500px] leading-relaxed mx-auto">
-            Query blocks, inspect addresses, fetch balances, and explore the Portaldot network — all in plain English. No SDK knowledge required.
+        {/* Centered Rotating glowing iridescent gradient orb */}
+        <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center select-none my-4 md:my-8 animate-fade-in-once [animation-delay:200ms]">
+          {/* Subtle bloom/glow backer */}
+          <div className="absolute w-[125%] h-[125%] rounded-full bg-[radial-gradient(circle,rgba(245,158,11,0.22)_0%,rgba(234,88,12,0.04)_50%,transparent_100%)] blur-[40px] md:blur-[60px] animate-pulse pointer-events-none" />
+          
+          {/* The Orb Ring */}
+          <div className="absolute w-48 h-48 md:w-64 md:h-64 rounded-full p-[2px] bg-gradient-to-r from-[#F59E0B] via-[#D97706] to-[#EA580C] animate-[spin_24s_linear_infinite] shadow-[0_0_50px_rgba(245,158,11,0.15)]">
+            <div className="w-full h-full rounded-full bg-[#000000] flex items-center justify-center">
+              {/* Internal glowing blur */}
+              <div className="w-[96%] h-[96%] rounded-full bg-gradient-to-tr from-[#F59E0B]/5 to-[#EA580C]/15 blur-[1px]" />
+            </div>
+          </div>
+          {/* Soft inner core */}
+          <div className="absolute w-32 h-32 md:w-40 md:h-40 rounded-full bg-[radial-gradient(circle,rgba(245,158,11,0.12)_0%,transparent_70%)] animate-[pulse_5s_ease-in-out_infinite]" />
+        </div>
+
+        {/* Headline overlaid or below */}
+        <h1 className="font-sans font-bold text-4xl md:text-[64px] text-[#F5F0E8] leading-[1.1] tracking-tight text-center max-w-4xl mt-6 animate-fade-in-once [animation-delay:400ms]">
+          The First AI Agent for <br />
+          <span className="text-[#F59E0B]">Portaldot</span>
+        </h1>
+
+        {/* Minimal CTA button below */}
+        <Link
+          href="/chat"
+          className="mt-10 md:mt-12 inline-flex items-center justify-center px-8 py-3.5 border border-[#F59E0B] text-[#F59E0B] hover:bg-[#F59E0B] hover:text-[#000000] font-mono text-xs tracking-[0.15em] uppercase font-bold transition-all duration-300 btn-tactile rounded-none animate-fade-in-once [animation-delay:600ms]"
+        >
+          Launch Hermes →
+        </Link>
+      </section>
+
+      {/* --- PLAYGROUND TERMINAL SECTION --- */}
+      <section className="py-20 md:py-40 max-w-5xl mx-auto w-full px-4 md:px-8 flex flex-col items-center relative z-10">
+        <div className="w-full flex flex-col space-y-4 mb-16 text-center md:text-left md:items-start">
+          <div className="font-mono text-xs tracking-[0.25em] text-[#F59E0B] uppercase">
+            [ PLAYGROUND ]
+          </div>
+          <h2 className="font-sans font-bold text-3xl md:text-[40px] tracking-tight text-[#F5F0E8] leading-tight">
+            Witness Hermes in <span className="text-[#F59E0B]">Action</span>
+          </h2>
+          <p className="font-sans text-base md:text-[18px] text-[#F5F0E8]/70 max-w-2xl leading-relaxed">
+            Interact with our simulated console environment. Hermes processes real-time intents, retrieves balances, and signs system transactions.
           </p>
-          <Link
-            href="/chat"
-            className="inline-flex items-center justify-center py-3 px-6 bg-[#F59E0B] text-[#0C0C0F] font-mono text-sm font-medium rounded-[8px] hover:bg-[#F59E0B]/90 shadow-lg shadow-[#F59E0B]/15 btn-tactile"
-          >
-            Launch Hermes →
-          </Link>
         </div>
 
         {/* Dynamic centered terminal UI */}
@@ -292,18 +316,18 @@ export default function LandingPage() {
           onClick={() => {
             if (stage === 5) inputRef.current?.focus();
           }}
-          className={`w-full max-w-4xl bg-[#030303]/90 border ${isFocused ? 'border-accent/40 shadow-[0_0_60px_rgba(245,158,11,0.2)]' : 'border-zinc-800 shadow-[0_0_50px_rgba(0,0,0,0.8)]'} rounded-lg overflow-hidden transition-all duration-300 cursor-text`}
+          className={`w-full max-w-4xl bg-[#111114] border ${isFocused ? 'border-[#F59E0B]/50 shadow-[0_0_60px_rgba(245,158,11,0.12)]' : 'border-white/[0.06] shadow-[0_0_50px_rgba(0,0,0,0.6)]'} rounded-none overflow-hidden transition-all duration-300 cursor-text`}
         >
           {/* Terminal Window Header */}
-          <div className="h-10 bg-zinc-950/80 border-b border-zinc-800 px-4 flex items-center justify-between">
+          <div className="h-10 bg-black/60 border-b border-white/[0.06] px-4 flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-500/60"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-green-500/60"></div>
-              <span className="text-xs text-zinc-500 pl-4 font-mono">hermes-terminal --boot-sequence</span>
+              <div className="w-2 h-2 rounded-full bg-red-500/40"></div>
+              <div className="w-2 h-2 rounded-full bg-yellow-500/40"></div>
+              <div className="w-2 h-2 rounded-full bg-green-500/40"></div>
+              <span className="text-[11px] text-zinc-500 pl-4 font-mono">hermes-terminal --boot-sequence</span>
             </div>
             {stage === 5 && (
-              <span className="text-[10px] text-green-400 font-bold bg-green-950/30 px-2 py-0.5 border border-green-900 rounded-full animate-pulse uppercase tracking-wider font-mono">
+              <span className="text-[10px] text-[#F59E0B] font-bold bg-[#F59E0B]/10 px-2.5 py-0.5 border border-[#F59E0B]/20 rounded-none animate-pulse uppercase tracking-wider font-mono">
                 ● INTERACTIVE_MODE
               </span>
             )}
@@ -313,22 +337,22 @@ export default function LandingPage() {
           <div className="p-4 md:p-6 space-y-4 text-xs md:text-sm h-[380px] md:h-[420px] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 flex flex-col justify-start">
             {/* Step 1: Initial typed command */}
             <div className="flex space-x-2">
-              <span className="text-accent font-bold">{">"}</span>
-              <span className="text-white">
+              <span className="text-[#F59E0B] font-bold">{">"}</span>
+              <span className="text-[#F5F0E8]">
                 {typedText}
-                {stage === 0 && <span className="inline-block w-1.5 h-4 bg-accent ml-1 animate-cursor-blink align-middle"></span>}
+                {stage === 0 && <span className="inline-block w-1.5 h-4 bg-[#F59E0B] ml-1 animate-cursor-blink align-middle"></span>}
               </span>
             </div>
 
             {/* Step 2: Parsing intent log */}
             {stage >= 1 && (
-              <div className="space-y-1 text-white/40 pl-4 border-l border-zinc-800/80 font-mono animate-fade-in">
+              <div className="space-y-1 text-white/40 pl-4 border-l border-white/[0.06] font-mono animate-fade-in">
                 <div className="flex items-center space-x-2">
                   <span className="text-zinc-600">●</span>
                   <span>[info] parsing intent...</span>
                 </div>
-                <div className="text-accent/60 flex items-center space-x-2">
-                  <span className="text-accent/40">●</span>
+                <div className="text-[#F59E0B]/60 flex items-center space-x-2">
+                  <span className="text-[#F59E0B]/40">●</span>
                   <span>[intent] classified: BATCH_QUERY</span>
                 </div>
               </div>
@@ -336,7 +360,7 @@ export default function LandingPage() {
 
             {/* Step 3: Fetching artifacts log */}
             {stage >= 2 && (
-              <div className="space-y-1 text-white/40 pl-4 border-l border-zinc-800/80 font-mono">
+              <div className="space-y-1 text-white/40 pl-4 border-l border-white/[0.06] font-mono">
                 <div className="flex items-center space-x-2">
                   <span className="text-zinc-600">●</span>
                   <span>[info] querying Balances.TotalIssuance and System.Events...</span>
@@ -346,7 +370,7 @@ export default function LandingPage() {
 
             {/* Step 4: Signing txn log */}
             {stage >= 3 && (
-              <div className="space-y-1 text-white/40 pl-4 border-l border-zinc-800/80 font-mono">
+              <div className="space-y-1 text-white/40 pl-4 border-l border-white/[0.06] font-mono">
                 <div className="flex items-center space-x-2">
                   <span className="text-zinc-600">●</span>
                   <span>[info] compiling structured multi-query results...</span>
@@ -356,14 +380,14 @@ export default function LandingPage() {
 
             {/* Step 5: Success box block */}
             {stage >= 4 && (
-              <div className="pl-4 border-l border-zinc-800/80">
-                <div className="bg-zinc-950/80 p-3 rounded border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.05)] space-y-2 max-w-2xl font-mono">
+              <div className="pl-4 border-l border-white/[0.06]">
+                <div className="bg-[#0C0C0F] p-3 rounded-none border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.05)] space-y-2 max-w-2xl font-mono">
                   <div className="text-green-400 font-bold mb-1 flex items-center space-x-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                     <span>[+] TRANSACTION_SUCCESS</span>
                   </div>
-                  <div className="text-[11px] md:text-xs text-white/90 leading-relaxed pl-3 border-l-2 border-green-500/40 space-y-1">
-                    <div>[CHAIN_QUERY] Total POT Supply: <span className="text-accent font-bold">1,000,000,000 POT</span></div>
+                  <div className="text-[11px] md:text-xs text-[#F5F0E8]/90 leading-relaxed pl-3 border-l-2 border-green-500/40 space-y-1">
+                    <div>[CHAIN_QUERY] Total POT Supply: <span className="text-[#F59E0B] font-bold">1,000,000,000 POT</span></div>
                     <div>[CHAIN_QUERY] Block Height: <span className="text-white/80">#412,402</span> · Finalized: <span className="text-white/60">#412,401</span></div>
                   </div>
                 </div>
@@ -375,14 +399,14 @@ export default function LandingPage() {
               <div key={idx} className="space-y-2">
                 {item.type === "input" ? (
                   <div className="flex space-x-2">
-                    <span className="text-accent font-bold">{">"}</span>
-                    <span className="text-white">{item.text}</span>
+                    <span className="text-[#F59E0B] font-bold">{">"}</span>
+                    <span className="text-[#F5F0E8]">{item.text}</span>
                   </div>
                 ) : (
-                  <div className="space-y-1 pl-4 border-l border-zinc-800/80">
+                  <div className="space-y-1 pl-4 border-l border-white/[0.06]">
                     <pre className="text-white/50 whitespace-pre-wrap font-mono text-xs leading-relaxed">{item.text}</pre>
                     {item.details && (
-                      <div className="bg-zinc-950/80 p-3 rounded border border-green-500/20 space-y-1 max-w-2xl font-mono mt-2">
+                      <div className="bg-[#0C0C0F] p-3 rounded-none border border-green-500/20 space-y-1 max-w-2xl font-mono mt-2">
                         <div className="text-green-400 font-bold mb-2 flex items-center space-x-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                           <span>[+] TRANSACTION_SUCCESS</span>
@@ -393,7 +417,7 @@ export default function LandingPage() {
                         </div>
                         <div className="grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-2 text-[11px] md:text-xs">
                           <span className="text-white/40">Address:</span>
-                          <span className="text-accent break-all font-mono">{item.details.address}</span>
+                          <span className="text-[#F59E0B] break-all font-mono">{item.details.address}</span>
                         </div>
                         <div className="grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-2 text-[11px] md:text-xs">
                           <span className="text-white/40">Tx Hash:</span>
@@ -409,7 +433,7 @@ export default function LandingPage() {
             {/* Interactive prompt input display */}
             {stage === 5 && (
               <form onSubmit={handleCommandSubmit} className="flex items-center space-x-2 pt-2">
-                <span className="text-accent font-bold">[portaldot-cli]&gt;</span>
+                <span className="text-[#F59E0B] font-bold">[portaldot-cli]&gt;</span>
                 <div className="flex-1 flex items-center relative">
                   <input
                     ref={inputRef}
@@ -418,12 +442,12 @@ export default function LandingPage() {
                     onChange={(e) => setCustomInput(e.target.value)}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
-                    className="bg-transparent border-none outline-none text-white font-mono flex-1 caret-transparent"
+                    className="bg-transparent border-none outline-none text-[#F5F0E8] font-mono flex-1 caret-transparent"
                     placeholder="Type intent (e.g. balance, help, system)..."
                   />
-                  <div className="absolute left-0 pointer-events-none text-white flex items-center font-mono">
+                  <div className="absolute left-0 pointer-events-none text-[#F5F0E8] flex items-center font-mono">
                     {customInput}
-                    <span className="inline-block w-1.5 h-4 bg-accent ml-0.5 animate-cursor-blink align-middle"></span>
+                    <span className="inline-block w-1.5 h-4 bg-[#F59E0B] ml-0.5 animate-cursor-blink align-middle"></span>
                   </div>
                 </div>
               </form>
@@ -434,86 +458,50 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Capabilities Strip */}
-      <div className="w-full py-6 overflow-hidden relative flex justify-center items-center">
-        <div className="flex flex-wrap justify-center items-center gap-x-8 md:gap-x-16 gap-y-6 max-w-5xl px-4 md:px-8">
-          {[
-            "block-lookup",
-            "pot-transfer",
-            "address-inspect",
-            "fee-estimate",
-            "addr-inspect",
-            "historic-balance",
-            "runtime-info",
-            "total-supply"
-          ].map((tag, idx) => {
-            const delay = idx * 300;
-            return (
-              <span
-                key={tag}
-                className="opacity-0 animate-fade-in-once inline-block"
-                style={{ animationDelay: `${delay}ms` }}
-              >
-                <span
-                  className="font-mono text-[11px] font-bold text-accent/60 uppercase tracking-widest hover:text-accent transition-colors duration-300 animate-float-infinite inline-block"
-                  style={{ animationDelay: `${delay}ms` }}
-                >
-                  [{tag}]
-                </span>
-              </span>
-            );
-          })}
+      {/* --- DX COMPARISON SECTION --- */}
+      <section className="py-20 md:py-40 max-w-5xl mx-auto w-full px-4 md:px-8 relative z-10">
+        <div className="flex flex-col space-y-4 mb-16 text-center md:text-left md:items-start">
+          <div className="font-mono text-xs tracking-[0.25em] text-[#F59E0B] uppercase">[ SIMPLICITY ]</div>
+          <h2 className="font-sans font-bold text-3xl md:text-[40px] tracking-tight text-[#F5F0E8] leading-tight">
+            Ditch the SDK. <span className="text-[#F59E0B]">Just Ask.</span>
+          </h2>
+          <p className="font-sans text-base md:text-[18px] text-[#F5F0E8]/70 max-w-2xl leading-relaxed">
+            Stop researching developer documentation and constructing complex RPC packets. Compile standard natural language into multi-query payloads in milliseconds.
+          </p>
         </div>
-      </div>
 
-      {/* Target 3: New DX Comparison Section (3D Scroll Reveal) */}
-      <ContainerScroll
-        titleComponent={
-          <div className="flex flex-col space-y-4 mb-12">
-            <div className="text-xs text-accent tracking-widest uppercase font-bold font-mono">Boilerplate vs Intent</div>
-            <h2 className="font-sans font-black text-3xl md:text-5xl tracking-tighter text-white uppercase font-sans">
-              DITCH THE DOCS. JUST ASK.
-            </h2>
-            <p className="text-sm text-white/50 max-w-2xl mx-auto font-sans leading-relaxed">
-              Stop digging through Portaldot documentation and writing manual SDK queries. Ask Hermes in plain English and get instant chain data, address intelligence, and network insights.
-            </p>
-          </div>
-        }
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch w-full text-left">
-          {/* Left Column: Dense Substrate SDK Boilerplate */}
-          <div className="flex flex-col bg-[#050505] border border-zinc-800 rounded-lg overflow-hidden group hover:border-zinc-700 transition-colors duration-300">
-            <div className="h-10 bg-zinc-950/80 border-b border-zinc-800 px-4 flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <span className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest font-bold">substrate_query.py</span>
-              </div>
-              <span className="text-[10px] text-red-400 font-bold font-mono bg-red-950/30 border border-red-900/60 px-2 py-0.5 rounded uppercase">
+        {/* 2-Column Minimal Side-by-Side Comparison */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch w-full">
+          {/* Left Column: Substrate SDK Boilerplate */}
+          <div className="flex flex-col bg-[#111114] border border-white/[0.06] rounded-none overflow-hidden hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.04)] transition-all duration-300">
+            <div className="h-10 bg-black/60 border-b border-white/[0.06] px-4 flex items-center justify-between">
+              <span className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest font-bold">substrate_query.py</span>
+              <span className="text-[10px] text-red-400 font-bold font-mono bg-red-950/20 border border-red-900/40 px-2 py-0.5 rounded-none uppercase">
                 34 Lines of Code
               </span>
             </div>
-            <div className="p-1">
+            <div className="p-2 overflow-hidden flex-1">
               <CodeBoilerplate />
             </div>
           </div>
 
           {/* Right Column: Clean single-line intent */}
-          <div className="flex flex-col justify-between p-6 md:p-8 bg-[#050505] border border-zinc-800 hover:border-accent/30 rounded-lg h-full transition-all duration-300 shadow-[0_0_40px_rgba(0,0,0,0.8)] relative overflow-hidden group">
-            {/* corner grid overlay decoration */}
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/5 to-transparent pointer-events-none"></div>
+          <div className="flex flex-col justify-between p-6 md:p-8 bg-[#111114] border border-white/[0.06] hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] rounded-none h-full transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#F59E0B]/5 to-transparent pointer-events-none"></div>
 
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] text-accent font-bold uppercase tracking-widest font-mono">Hermes Prompt Interface</span>
-                <span className="text-[10px] text-green-400 font-bold font-mono bg-green-950/30 border border-green-900/60 px-2 py-0.5 rounded uppercase">
+                <span className="text-[10px] text-[#F59E0B] font-bold uppercase tracking-widest font-mono">Hermes Interface</span>
+                <span className="text-[10px] text-green-400 font-bold font-mono bg-green-950/20 border border-green-900/40 px-2 py-0.5 rounded-none uppercase">
                   1 Line of Text
                 </span>
               </div>
 
               <div className="space-y-4">
-                <div className="text-xs text-zinc-500 uppercase tracking-widest font-bold font-sans">Natural Language Query</div>
-                <div className="bg-zinc-950 border border-zinc-800 p-5 rounded-lg flex items-center space-x-3 shadow-inner relative group-hover:border-accent/20 transition-colors duration-300">
-                  <span className="text-accent font-black text-lg select-none">&gt;</span>
-                  <span className="text-white text-sm md:text-base font-bold font-sans tracking-wide leading-relaxed">
+                <div className="text-xs text-zinc-500 uppercase tracking-widest font-bold font-mono">Natural Language Query</div>
+                <div className="bg-black/60 border border-white/[0.06] p-5 rounded-none flex items-center space-x-3 shadow-inner relative group-hover:border-[#F59E0B]/20 transition-colors duration-300">
+                  <span className="text-[#F59E0B] font-black text-lg select-none">&gt;</span>
+                  <span className="text-[#F5F0E8] text-sm md:text-base font-bold font-sans tracking-wide leading-relaxed">
                     show me total POT supply and current block height
                   </span>
                 </div>
@@ -522,75 +510,79 @@ export default function LandingPage() {
               <div className="space-y-3 pt-4 font-mono">
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-zinc-500 uppercase tracking-wider font-bold">Compiler Intent Analysis Pipeline</span>
-                  <span className="text-accent font-bold tracking-widest">100% COMPILED</span>
+                  <span className="text-[#F59E0B] font-bold tracking-widest">100% COMPILED</span>
                 </div>
-                <div className="h-2.5 w-full bg-zinc-950 border border-zinc-800/80 rounded-sm overflow-hidden p-0.5">
+                <div className="h-2.5 w-full bg-black border border-white/[0.06] rounded-none overflow-hidden p-0.5">
                   <div
-                    className="h-full bg-gradient-to-r from-accent via-amber-500 to-accent shadow-[0_0_15px_rgba(245,158,11,0.6)] rounded-sm transition-all duration-1000 ease-out"
+                    className="h-full bg-gradient-to-r from-[#F59E0B] via-amber-500 to-[#F59E0B] shadow-[0_0_15px_rgba(245,158,11,0.5)] rounded-none transition-[width] duration-600 ease-out"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
               </div>
             </div>
 
-            <div className="pt-8 border-t border-zinc-900/80 flex items-center justify-between text-xs text-zinc-500 font-mono">
+            <div className="pt-8 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-500 font-mono">
               <span>Status: Pipeline Resolved</span>
               <span className="text-green-400 font-bold">Success (2ms)</span>
             </div>
           </div>
         </div>
-      </ContainerScroll>
+      </section>
 
-      {/* Target 4: Capabilities Matrix (tmux Style) */}
-      <section className="max-w-5xl mx-auto w-full px-4 md:px-8 py-16 md:py-24">
-        <div className="flex flex-col space-y-2 mb-12">
-          <div className="text-xs text-accent tracking-widest uppercase font-bold font-mono">[CAPABILITIES]</div>
-          <h2 className="font-sans font-bold text-2xl md:text-3xl tracking-wide uppercase">
-            Agent Capabilities
+      {/* --- CAPABILITIES MATRIX SECTION --- */}
+      <section className="py-20 md:py-40 max-w-5xl mx-auto w-full px-4 md:px-8 relative z-10">
+        <div className="flex flex-col space-y-4 mb-16 text-center md:text-left md:items-start">
+          <div className="font-mono text-xs tracking-[0.25em] text-[#F59E0B] uppercase">[ CAPABILITIES ]</div>
+          <h2 className="font-sans font-bold text-3xl md:text-[40px] tracking-tight text-[#F5F0E8] leading-tight">
+            Agent <span className="text-[#F59E0B]">Capabilities</span>
           </h2>
+          <p className="font-sans text-base md:text-[18px] text-[#F5F0E8]/70 max-w-2xl leading-relaxed">
+            Hermes couples advanced low-latency machine inference with direct substrate interactions for comprehensive on-chain control.
+          </p>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Card 1: Intent Parsing */}
-          <div className="relative bg-[#030303]/90 border border-zinc-800/80 p-6 md:p-8 space-y-4 rounded-none transition-all duration-300 hover:border-accent/40 hover:bg-[#050505] group">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-accent transition-colors">[AGENT-v1.0]</span>
-            <div className="text-accent font-bold text-base font-mono">[01] INTENT_PARSING</div>
-            <h3 className="font-sans font-bold text-lg text-white group-hover:text-accent transition-colors">Groq Engine</h3>
-            <p className="text-xs md:text-sm text-white/50 leading-relaxed font-sans">
+          <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
+            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[AGENT-v1.0]</span>
+            <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#01_INTENT</div>
+            <h3 className="font-sans font-bold text-xl text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Groq Engine</h3>
+            <p className="text-sm md:text-base text-[#F5F0E8]/70 leading-relaxed font-sans font-normal">
               Transform natural language requests into strict Substrate transaction payloads instantly.
             </p>
           </div>
 
           {/* Card 2: Chain Intelligence */}
-          <div className="relative bg-[#030303]/90 border border-zinc-800/80 p-6 md:p-8 space-y-4 rounded-none transition-all duration-300 hover:border-accent/40 hover:bg-[#050505] group">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-accent transition-colors">[EXPLORER]</span>
-            <div className="text-accent font-bold text-base font-mono">[02] CHAIN_INTELLIGENCE</div>
-            <h3 className="font-sans font-bold text-lg text-white group-hover:text-accent transition-colors">Block Explorer</h3>
-            <p className="text-xs md:text-sm text-white/50 leading-relaxed font-sans">
+          <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
+            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[EXPLORER]</span>
+            <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#02_CHAIN_INTELLIGENCE</div>
+            <h3 className="font-sans font-bold text-xl text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Block Explorer</h3>
+            <p className="text-sm md:text-base text-[#F5F0E8]/70 leading-relaxed font-sans font-normal">
               Query blocks, inspect addresses, fetch historic balances, and monitor network state in real time.
             </p>
           </div>
 
           {/* Card 3: Address Inspector */}
-          <div className="relative bg-[#030303]/90 border border-zinc-800/80 p-6 md:p-8 space-y-4 rounded-none transition-all duration-300 hover:border-accent/40 hover:bg-[#050505] group">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-accent transition-colors">[ADDR-INSPECT]</span>
-            <div className="text-accent font-bold text-base font-mono">[03] ADDR_INSPECTOR</div>
-            <h3 className="font-sans font-bold text-lg text-white group-hover:text-accent transition-colors">Address Inspector</h3>
-            <p className="text-xs md:text-sm text-white/50 leading-relaxed font-sans">
+          <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
+            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[ADDR-INSPECT]</span>
+            <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#03_ADDR_INSPECTOR</div>
+            <h3 className="font-sans font-bold text-xl text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Address Inspector</h3>
+            <p className="text-sm md:text-base text-[#F5F0E8]/70 leading-relaxed font-sans font-normal">
               Inspect any Portaldot address — check balance, nonce, and account type instantly.
             </p>
           </div>
 
           {/* Card 4: State Monitoring with Live Update */}
-          <div className="relative bg-[#030303]/90 border border-zinc-800/80 p-6 md:p-8 space-y-4 rounded-none transition-all duration-300 hover:border-accent/40 hover:bg-[#050505] group">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-accent transition-colors">[STATE-MONITOR]</span>
-            <div className="text-accent font-bold text-base font-mono">[04] REAL_TIME_METRICS</div>
-            <h3 className="font-sans font-bold text-lg text-white group-hover:text-accent transition-colors">State Monitoring</h3>
-            <p className="text-xs md:text-sm text-white/50 leading-relaxed font-sans">
+          <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
+            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[STATE-MONITOR]</span>
+            <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#04_REAL_TIME_METRICS</div>
+            <h3 className="font-sans font-bold text-xl text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">State Monitoring</h3>
+            <p className="text-sm md:text-base text-[#F5F0E8]/70 leading-relaxed font-sans font-normal">
               Maintain full real-time visual telemetry over deployed ink! contract blocks.
             </p>
 
             {/* Live Updating Block Height */}
-            <div className="mt-4 flex items-center space-x-2 bg-[#020202] border border-zinc-800/80 px-3 py-1.5 rounded-sm font-mono text-xs w-full max-w-[240px]">
+            <div className="mt-4 flex items-center space-x-2 bg-black border border-white/[0.04] px-3 py-1.5 rounded-none font-mono text-xs w-full max-w-[240px]">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse"></span>
               <span className="text-zinc-500 font-bold uppercase text-[10px]">Height:</span>
               <span className="text-green-400 font-bold">#{blockHeight.toLocaleString()}</span>
@@ -601,104 +593,121 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Target 4: How It Works Section (tmux Style) */}
-      <section className="max-w-5xl mx-auto w-full px-4 md:px-8 py-16 md:py-24 border-b border-zinc-900 bg-background/10">
-        <div className="flex flex-col space-y-2 mb-12">
-          <div className="text-xs text-accent tracking-widest uppercase font-bold font-mono">[WORKFLOW]</div>
-          <h2 className="font-sans font-bold text-2xl md:text-3xl tracking-wide uppercase">
-            How It Works
+      {/* --- WORKFLOW SECTION --- */}
+      <section className="py-20 md:py-40 max-w-5xl mx-auto w-full px-4 md:px-8 relative z-10">
+        <div className="flex flex-col space-y-4 mb-16 text-center md:text-left md:items-start">
+          <div className="font-mono text-xs tracking-[0.25em] text-[#F59E0B] uppercase">[ WORKFLOW ]</div>
+          <h2 className="font-sans font-bold text-3xl md:text-[40px] tracking-tight text-[#F5F0E8] leading-tight">
+            How It <span className="text-[#F59E0B]">Works</span>
           </h2>
+          <p className="font-sans text-base md:text-[18px] text-[#F5F0E8]/70 max-w-2xl leading-relaxed">
+            The standard, streamlined interaction pipeline utilized by Hermes to translate, verify, and resolve your commands.
+          </p>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Step 1 */}
-          <div className="relative bg-[#030303]/90 border border-zinc-800/80 p-6 md:p-8 space-y-4 rounded-none transition-all duration-300 hover:border-accent/40 hover:bg-[#050505] group">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-accent transition-colors">[SYS-INTENT]</span>
-            <div className="text-accent font-bold text-base font-mono">[01] INTENT</div>
-            <h3 className="font-sans font-bold text-lg text-white group-hover:text-accent transition-colors">Type your intent</h3>
-            <p className="text-xs text-white/50 leading-relaxed font-sans">
+          <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
+            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[SYS-INTENT]</span>
+            <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#01_INTENT</div>
+            <h3 className="font-sans font-bold text-lg text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Type intent</h3>
+            <p className="text-xs text-[#F5F0E8]/70 leading-relaxed font-sans">
               Simply express your goal in natural language (e.g., 'deploy a token contract').
             </p>
           </div>
 
           {/* Step 2 */}
-          <div className="relative bg-[#030303]/90 border border-zinc-800/80 p-6 md:p-8 space-y-4 rounded-none transition-all duration-300 hover:border-accent/40 hover:bg-[#050505] group">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-accent transition-colors">[SYS-PROC]</span>
-            <div className="text-accent font-bold text-base font-mono">[02] PROCESSING</div>
-            <h3 className="font-sans font-bold text-lg text-white group-hover:text-accent transition-colors">Hermes parses + executes</h3>
-            <p className="text-xs text-white/50 leading-relaxed font-sans">
+          <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
+            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[SYS-PROC]</span>
+            <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#02_PROCESSING</div>
+            <h3 className="font-sans font-bold text-lg text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Parse &amp; Compile</h3>
+            <p className="text-xs text-[#F5F0E8]/70 leading-relaxed font-sans">
               Our ultra-low latency Groq-powered inference engine compiles, parses, and signs the transaction payload.
             </p>
           </div>
 
           {/* Step 3 */}
-          <div className="relative bg-[#030303]/90 border border-zinc-800/80 p-6 md:p-8 space-y-4 rounded-none transition-all duration-300 hover:border-accent/40 hover:bg-[#050505] group">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-accent transition-colors">[SYS-LIVE]</span>
-            <div className="text-accent font-bold text-base font-mono">[03] RESOLVED</div>
-            <h3 className="font-sans font-bold text-lg text-white group-hover:text-accent transition-colors">Chain data returned instantly</h3>
-            <p className="text-xs text-white/50 leading-relaxed font-sans">
+          <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
+            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[SYS-LIVE]</span>
+            <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#03_RESOLVED</div>
+            <h3 className="font-sans font-bold text-lg text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Instant Results</h3>
+            <p className="text-xs text-[#F5F0E8]/70 leading-relaxed font-sans">
               Hermes queries the Portaldot node and returns structured, readable results directly in your terminal.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Large Editorial Footer (Landing Page Exclusive) */}
-      <footer className="pt-[120px] pb-0 w-full font-mono relative overflow-hidden bg-transparent mt-auto">
-        {/* Top Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-16 max-w-5xl mx-auto w-full px-4 md:px-8">
-          <div className="space-y-4">
-            <h3 className="font-sans font-black text-4xl md:text-5xl text-white tracking-tighter uppercase leading-none">
-              Experience <br />
-              <span className="text-accent">Liftoff</span>
-            </h3>
-            <p className="text-xs text-white/40 max-w-xs leading-relaxed">
-              Deploy smart contracts, sign transactions, and query blocks instantly using natural language.
+      {/* --- EDITORIAL FOOTER --- */}
+      <footer className="w-full bg-[#000000] mt-auto z-10 relative pt-12 pb-0">
+        {/* Top Row: tagline left, nav columns right */}
+        <div className="max-w-[1400px] mx-auto px-8 md:px-16 flex flex-col md:flex-row justify-between items-start gap-8 pb-10 border-b border-white/[0.06]">
+
+          {/* Left: Catchy tagline */}
+          <div className="space-y-3 max-w-xs">
+            <p className="font-sans font-bold text-xl md:text-2xl text-[#F5F0E8] leading-snug tracking-tight">
+              The chain speaks.<br />
+              <span className="text-[#F59E0B]">You just ask.</span>
             </p>
-            <div className="text-[10px] text-white/20 pt-2 font-mono">
-              &copy; 2026 Hermes Systems Inc. All rights reserved.
-            </div>
+            <p className="font-mono text-[11px] text-zinc-600 tracking-widest uppercase leading-relaxed">
+              Plain English → On-chain results.<br />
+              No SDK. No docs. Just intent.
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-16 md:gap-24">
-            {/* Workspace Column */}
+          {/* Right: Nav Columns */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-12 md:gap-20 text-[13px]">
+            {/* Workspace column */}
             <div className="space-y-4">
-              <h4 className="text-xs text-white uppercase tracking-widest font-bold font-sans">Workspace</h4>
-              <ul className="space-y-2 text-xs">
-                <li>
-                  <Link href="/chat" className="text-white/40 hover:text-accent transition-colors">Chat Console</Link>
-                </li>
-                <li>
-                  <Link href="/explorer" className="text-white/40 hover:text-accent transition-colors">Explorer</Link>
-                </li>
-                <li>
-                  <Link href="/docs" className="text-white/40 hover:text-accent transition-colors">Docs</Link>
-                </li>
+              <h4 className="font-sans font-bold text-[11px] text-[#F5F0E8] uppercase tracking-[0.2em]">Workspace</h4>
+              <ul className="space-y-3 font-mono">
+                <li><Link href="/chat" className="text-zinc-500 hover:text-[#F59E0B] transition-colors duration-200">Chat Console</Link></li>
+                <li><Link href="/explorer" className="text-zinc-500 hover:text-[#F59E0B] transition-colors duration-200">Explorer</Link></li>
+                <li><Link href="/docs" className="text-zinc-500 hover:text-[#F59E0B] transition-colors duration-200">Docs</Link></li>
               </ul>
             </div>
 
-            {/* Connect Column */}
+            {/* Connect column */}
             <div className="space-y-4">
-              <h4 className="text-xs text-white uppercase tracking-widest font-bold font-sans">Connect</h4>
-              <ul className="space-y-2 text-xs">
+              <h4 className="font-sans font-bold text-[11px] text-[#F5F0E8] uppercase tracking-[0.2em]">Connect</h4>
+              <ul className="space-y-3 font-mono">
+                <li><a href="https://x.com/fortyxbt" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#F59E0B] transition-colors duration-200">Twitter / X</a></li>
+                <li><a href="https://github.com/danielamodu" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#F59E0B] transition-colors duration-200">GitHub</a></li>
+                <li><a href="https://discord.com/fortyxbt" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#F59E0B] transition-colors duration-200">Discord</a></li>
+              </ul>
+            </div>
+
+            {/* Network column */}
+            <div className="space-y-4">
+              <h4 className="font-sans font-bold text-[11px] text-[#F5F0E8] uppercase tracking-[0.2em]">Network</h4>
+              <ul className="space-y-3 font-mono">
+                <li><span className="text-zinc-600">Portaldot Devnet</span></li>
+                <li><span className="text-zinc-600">Local Node :9944</span></li>
                 <li>
-                  <a href="https://x.com/fortyxbt" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-accent transition-colors">Twitter / X</a>
-                </li>
-                <li>
-                  <a href="https://github.com/danielamodu" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-accent transition-colors">GitHub</a>
-                </li>
-                <li>
-                  <a href="https://discord.com/fortyxbt" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-accent transition-colors">Discord</a>
+                  <span className="inline-flex items-center gap-1.5 text-green-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse inline-block"></span>
+                    Live
+                  </span>
                 </li>
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Massive Giant Typography (Centerpiece) */}
-        <div className="w-full select-none pointer-events-none mt-16 mb-0 overflow-hidden flex justify-center items-center">
-          <span className="font-sans font-black text-[13vw] tracking-tighter uppercase leading-none text-white/[0.04] text-center w-full select-none block leading-none">
-            HERMES
+        {/* Massive full-width HERMES wordmark */}
+        <div className="w-full select-none pointer-events-none">
+          <span className="font-sans font-black text-[10vw] tracking-[-0.03em] uppercase leading-none text-[#F5F0E8]/[0.05] block text-center w-full whitespace-nowrap">HERMES
           </span>
+        </div>
+
+        {/* Bottom slim copyright bar */}
+        <div className="max-w-[1400px] mx-auto px-8 md:px-16 py-5 flex flex-col md:flex-row justify-between items-center gap-3 border-t border-white/[0.04]">
+          <span className="font-mono text-[10px] text-zinc-700">&copy; 2026 Hermes Systems Inc. All rights reserved.</span>
+          <div className="flex gap-6 font-mono text-[10px] text-zinc-700">
+            <Link href="/privacy" className="hover:text-[#F59E0B] transition-colors duration-200">Privacy</Link>
+            <Link href="/terms" className="hover:text-[#F59E0B] transition-colors duration-200">Terms</Link>
+            <span className="text-[#F59E0B]/40">v1.0.0</span>
+          </div>
         </div>
       </footer>
     </div>

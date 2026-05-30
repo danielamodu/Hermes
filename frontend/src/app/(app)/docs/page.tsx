@@ -156,7 +156,7 @@ npm install`}
 python main.py`}
               </pre>
               <p className="text-zinc-500 leading-relaxed font-sans text-[11px]">
-                This boots up the FastAPI backend on <code className="text-white">http://localhost:8000</code>.
+                This boots up the FastAPI backend on <code className="text-white">http://localhost:8000</code> (configurable via <code className="text-white">NEXT_PUBLIC_API_URL</code>).
               </p>
             </div>
 

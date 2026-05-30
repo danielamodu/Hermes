@@ -12,7 +12,7 @@ export default function Header() {
   useEffect(() => {
     const fetchBlockHeight = async () => {
       try {
-        const res = await fetch("http://localhost:8000/chat", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -93,10 +93,10 @@ export default function Header() {
           )}
         </div>
 
-        <nav className="flex space-x-6 text-sm text-white/60 font-medium overflow-x-auto pb-1 md:pb-0 scrollbar-hide">
-          <Link href="/chat" className="hover:text-accent transition-colors whitespace-nowrap">Chat</Link>
-          <Link href="/explorer" className="hover:text-accent transition-colors whitespace-nowrap">Explorer</Link>
-          <Link href="/docs" className="hover:text-accent transition-colors whitespace-nowrap">Docs</Link>
+        <nav className="flex space-x-6 text-sm font-medium overflow-x-auto pb-1 md:pb-0 scrollbar-hide">
+          <Link href="/chat" className={`hover:text-accent transition-colors whitespace-nowrap ${pathname === '/chat' ? 'text-accent' : 'text-white/60'}`}>Chat</Link>
+          <Link href="/explorer" className={`hover:text-accent transition-colors whitespace-nowrap ${pathname === '/explorer' ? 'text-accent' : 'text-white/60'}`}>Explorer</Link>
+          <Link href="/docs" className={`hover:text-accent transition-colors whitespace-nowrap ${pathname === '/docs' ? 'text-accent' : 'text-white/60'}`}>Docs</Link>
         </nav>
         
         {/* Desktop right side */}

@@ -36,7 +36,7 @@ export function AIPromptBox({
   };
 
   return (
-    <div className="w-full bg-[#0C0C0E] border border-zinc-800/40 focus-within:border-amber-500/40 focus-within:ring-1 focus-within:ring-[#F59E0B]/50 rounded-2xl transition-all duration-200 relative group">
+    <div className="w-full bg-[#0C0C0E] border border-zinc-800/40 focus-within:border-amber-500/50 focus-within:ring-1 focus-within:ring-[#F59E0B]/70 focus-within:shadow-[0_0_0_3px_rgba(245,158,11,0.08)] rounded-2xl transition-all duration-200 relative group">
       <form onSubmit={onSubmit} className="flex items-end gap-3 p-3 select-none">
         {/* Input Text Area */}
         <div className="flex-1 flex items-center">

@@ -62,7 +62,7 @@ export default function ExplorerPage() {
   const fetchBlockHeight = async (silent = false) => {
     if (!silent) setIsRefreshingFeed(true);
     try {
-      const response = await fetch("http://localhost:8000/chat", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: "what is the current block height" }),
@@ -166,7 +166,7 @@ export default function ExplorerPage() {
         ? `show me block ${trimmed.replace(/,/g, "")}` 
         : `inspect address ${trimmed}`;
 
-      const response = await fetch("http://localhost:8000/chat", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: promptMessage }),

@@ -74,3 +74,20 @@ body {
   animation: spin 0.6s linear infinite;
 }
 
+/* Fast status ping (replaces Tailwind's slow 1s animate-ping) */
+@keyframes ping-fast {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+.animate-ping-fast {
+  animation: ping-fast 0.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Smooth thinking/typing indicator dots */
+@keyframes thinking-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+.animate-thinking-dot {
+  animation: thinking-dot 1s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
