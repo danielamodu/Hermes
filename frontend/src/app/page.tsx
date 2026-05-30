@@ -113,10 +113,14 @@ export default function LandingPage() {
     }
   }, [typingIndex]);
 
-  // Scroll to bottom
+  // Scroll to bottom of terminal container only
   useEffect(() => {
-    if (terminalEndRef.current) {
-      terminalEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (terminalEndRef.current && terminalEndRef.current.parentElement) {
+      const parent = terminalEndRef.current.parentElement;
+      parent.scrollTo({
+        top: parent.scrollHeight,
+        behavior: "smooth"
+      });
     }
   }, [stage, history]);
 
