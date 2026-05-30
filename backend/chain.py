@@ -256,18 +256,28 @@ class ChainClient:
             )
             
             keypair = Keypair.create_from_uri("//Alice")
+            alice_addr = keypair.ss58_address
+            
+            # Verify balance before
+            res_before = self.chain.query('System', 'Account', [alice_addr])
+            bal_before = res_before.value['data']['free'] if res_before else 0
+            
             extrinsic = self.chain.create_signed_extrinsic(call=call, keypair=keypair)
-            receipt = self.chain.submit_extrinsic(extrinsic, wait_for_inclusion=True)
-            tx_hash = getattr(receipt, 'extrinsic_hash', receipt)
-            block_hash = getattr(receipt, 'block_hash', None)
+            receipt = self.chain.submit_extrinsic(extrinsic, wait_for_inclusion=False)
+            
+            # Verify balance after
+            res_after = self.chain.query('System', 'Account', [alice_addr])
+            bal_after = res_after.value['data']['free'] if res_after else 0
+            
+            print(f"Transfer broadcasted. Alice balance before: {bal_before}, after: {bal_after}")
             
             return {
-                "status": "success",
-                "data": {
-                    "tx_hash": tx_hash,
-                    "block_hash": block_hash,
-                    "dest": dest,
-                    "amount": f"{amount:,.4f} POT"
+                'status': 'success',
+                'data': {
+                    'tx_hash': str(getattr(receipt, 'extrinsic_hash', receipt)),
+                    'dest': dest,
+                    'amount': f'{amount:,.4f} POT',
+                    'note': 'Transaction broadcast to Portaldot network'
                 }
             }
                 

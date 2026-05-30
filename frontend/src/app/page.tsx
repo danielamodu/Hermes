@@ -299,7 +299,7 @@ export default function LandingPage() {
 
       {/* --- PLAYGROUND TERMINAL SECTION --- */}
       <section className="py-20 md:py-40 max-w-5xl mx-auto w-full px-4 md:px-8 flex flex-col items-center relative z-10">
-        <div className="w-full flex flex-col space-y-4 mb-16 text-center md:text-left md:items-start">
+        <div className="w-full max-w-4xl flex flex-col space-y-4 mb-16 text-center md:text-left md:items-start">
           <div className="font-mono text-xs tracking-[0.25em] text-[#F59E0B] uppercase">
             [ PLAYGROUND ]
           </div>
