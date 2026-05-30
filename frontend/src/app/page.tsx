@@ -223,12 +223,12 @@ export default function LandingPage() {
         </h1>
 
         {/* Minimal CTA button below */}
-        <Link
+        <a
           href="/chat"
           className="mt-10 md:mt-12 inline-flex items-center justify-center px-8 py-3.5 border border-[#F59E0B] text-[#F59E0B] hover:bg-[#F59E0B] hover:text-[#000000] font-mono text-xs tracking-[0.15em] uppercase font-bold transition-all duration-200 btn-tactile rounded-none animate-fade-in-once [animation-delay:600ms]"
         >
           Launch Hermes →
-        </Link>
+        </a>
       </section>
 
       {/* --- PLAYGROUND TERMINAL SECTION --- */}
