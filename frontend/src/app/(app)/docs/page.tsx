@@ -87,7 +87,7 @@ export default function DocsPage() {
                 <tr className="hover:bg-white/[0.01] transition-colors">
                   <td className="p-4 font-bold text-[#F59E0B]">Runtime Specs</td>
                   <td className="p-4 italic text-zinc-400">"show runtime details"</td>
-                  <td className="p-4 font-mono text-zinc-500">Fetches specName, specVersion, and ss58Formats from node properties.</td>
+                  <td className="p-4 font-mono text-zinc-500">Fetches specName, specVersion, and address formats from node properties.</td>
                 </tr>
                 <tr className="hover:bg-white/[0.01] transition-colors">
                   <td className="p-4 font-bold text-[#F59E0B]">Total Supply</td>
@@ -97,7 +97,7 @@ export default function DocsPage() {
                 <tr className="hover:bg-white/[0.01] transition-colors">
                   <td className="p-4 font-bold text-[#F59E0B]">Address Inspector</td>
                   <td className="p-4 italic text-zinc-400">"inspect address 5Grw..."</td>
-                  <td className="p-4 font-mono text-zinc-500">Queries balance, nonce, and account type for any ss58 address.</td>
+                  <td className="p-4 font-mono text-zinc-500">Queries balance, nonce, and account type for any account address.</td>
                 </tr>
               </tbody>
             </table>

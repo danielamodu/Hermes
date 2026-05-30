@@ -154,7 +154,28 @@ export default function ChatPage() {
     try {
       const d = new Date(ts);
       if (isNaN(d.getTime())) return 'just now';
-      return d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+      
+      const now = new Date();
+      const diffMs = now.getTime() - d.getTime();
+      const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+      
+      if (diffHrs < 1) {
+        const diffMins = Math.floor(diffMs / (1000 * 60));
+        if (diffMins < 1) return 'just now';
+        return `${diffMins}m ago`;
+      }
+      
+      if (now.toDateString() === d.toDateString()) {
+        return d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+      }
+      
+      const yesterday = new Date();
+      yesterday.setDate(now.getDate() - 1);
+      if (yesterday.toDateString() === d.toDateString()) {
+        return 'Yesterday';
+      }
+      
+      return d.toLocaleDateString([], {month: 'short', day: 'numeric'});
     } catch { return 'just now'; }
   };
 
@@ -180,6 +201,18 @@ export default function ChatPage() {
   const handleSendPOT = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!sendRecipient.trim() || !sendAmount.trim()) return;
+    
+    const amountVal = parseFloat(sendAmount);
+    const balanceVal = parseFloat(potBalance);
+    if (isNaN(amountVal) || amountVal <= 0) {
+      setSendError("Please enter a valid amount.");
+      return;
+    }
+    if (!isNaN(balanceVal) && amountVal > balanceVal) {
+      setSendError("Amount exceeds available balance.");
+      return;
+    }
+    
     setIsSendingPOT(true);
     setSendSuccessData(null);
     setSendError(null);
@@ -255,6 +288,7 @@ export default function ChatPage() {
 
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -263,6 +297,36 @@ export default function ChatPage() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const loadedWalletRef = useRef<string | null>(null);
+
+  // Global Keyboard Shortcuts
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      // Ignore if typing in input or textarea
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        if (e.key === 'Escape') {
+          e.target.blur();
+        }
+        return;
+      }
+      
+      if (e.key.toLowerCase() === 'n') {
+        e.preventDefault();
+        document.getElementById('new-chat-btn')?.click();
+      } else if (e.key === '[' || (e.key === '\\' && e.metaKey)) {
+        e.preventDefault();
+        setIsSidebarOpen(prev => !prev);
+      } else if (e.key === 'Escape') {
+        setActiveMenuId(null);
+        setEditingSessionId(null);
+        setConfirmDeleteId(null);
+        setShowProfileDropdown(false);
+        setShowWalletDropdown(false);
+      }
+    };
+    
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
 
   // Close menus on click away
   useEffect(() => {
@@ -594,6 +658,7 @@ export default function ChatPage() {
           {/* Action Buttons */}
           <div className="flex flex-col gap-1.5 mb-4 shrink-0">
             <button
+              id="new-chat-btn"
               onClick={handleNewChat}
               className="w-full flex items-center gap-2.5 px-3 py-2 text-[11px] font-mono text-zinc-500 hover:text-amber-500 rounded-lg btn-tactile hover:bg-zinc-900/50 text-left cursor-pointer"
             >
@@ -664,10 +729,13 @@ export default function ChatPage() {
                       autoFocus
                     />
                   ) : (
-                    <span className="truncate flex-1 pr-2 flex items-center gap-1.5 select-none">
-                      {s.isPinned && <span className="text-amber-500 shrink-0 font-sans text-[10px]">📌</span>}
-                      <span className="truncate">{s.title}</span>
-                    </span>
+                    <div className="flex-1 min-w-0 pr-2 flex flex-col justify-center select-none gap-0.5">
+                      <div className="flex items-center gap-1.5 w-full">
+                        {s.isPinned && <span className="text-amber-500 shrink-0 font-sans text-[10px]">📌</span>}
+                        <span className="truncate">{s.title}</span>
+                      </div>
+                      {s.timestamp && <span className="text-[9px] text-zinc-600 truncate">{formatDate(s.timestamp)}</span>}
+                    </div>
                   )}
 
                   {editingSessionId !== s.id && (
@@ -716,11 +784,17 @@ export default function ChatPage() {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleDelete(s.id);
+                                if (confirmDeleteId === s.id) {
+                                  handleDelete(s.id);
+                                  setConfirmDeleteId(null);
+                                } else {
+                                  setConfirmDeleteId(s.id);
+                                  setTimeout(() => setConfirmDeleteId(null), 3000);
+                                }
                               }}
-                              className="text-left px-2.5 py-1.5 text-red-400 hover:bg-zinc-900 hover:text-red-300 btn-tactile border-t border-zinc-900"
+                              className="text-left px-2.5 py-1.5 text-red-400 hover:bg-zinc-900 hover:text-red-300 btn-tactile border-t border-zinc-900 transition-colors"
                             >
-                              Delete
+                              {confirmDeleteId === s.id ? "Confirm Delete" : "Delete"}
                             </button>
                           </motion.div>
                         )}
@@ -1093,7 +1167,7 @@ export default function ChatPage() {
                 {[
                   "What is the current block height and network status?",
                   "Show me the total POT supply",
-                  "What is LAO NPoS consensus in Portaldot?",
+                  "What is the consensus mechanism in Portaldot?",
                   "What is the current POT transfer fee?",
                 ].map((prompt, idx) => (
                   <button
@@ -1236,7 +1310,7 @@ export default function ChatPage() {
               />
             </div>
 
-            <p className="text-center text-[10px] text-[#52525B] mt-2">Hermes is an AI and can make mistakes.</p>
+            <p className="text-center text-[11px] text-zinc-600 mt-2">Hermes is an AI and can make mistakes.</p>
 
           </div>
         </div>
@@ -1285,7 +1359,7 @@ export default function ChatPage() {
                   e.preventDefault();
                   const trimmed = modalInput.trim();
                   if (!isValidSS58(trimmed)) {
-                    setModalError("Invalid address. Must be a valid SS58 address starting with 5 and be 47-48 characters long.");
+                    setModalError("Invalid address. It must start with 5 and be 47-48 characters long.");
                     return;
                   }
                   localStorage.setItem("hermes_active_address", trimmed);
@@ -1305,7 +1379,7 @@ export default function ChatPage() {
                       if (modalError) setModalError(null);
                     }}
                     className="bg-zinc-950/80 border border-zinc-800 rounded-lg px-3 py-2.5 outline-none focus:border-[#F59E0B] text-zinc-200 transition-all font-sans text-xs w-full placeholder-zinc-700 font-mono"
-                    aria-label="Portaldot ss58 address"
+                    aria-label="Portaldot address"
                     aria-describedby={modalError ? "modal-error" : undefined}
                     autoFocus
                   />
@@ -1316,6 +1390,10 @@ export default function ChatPage() {
                     </div>
                   )}
                   
+                  <span className="text-zinc-500 text-[10px] leading-relaxed mt-1">
+                    A Portaldot address is a unique identifier for your account on the network. It starts with the number 5 and is 47–48 characters long.
+                  </span>
+
                   <div className="mt-1">
                     <button
                       type="button"

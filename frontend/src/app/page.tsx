@@ -14,7 +14,7 @@ const CodeBoilerplate = () => (
       <span className="text-purple-400">try</span>:{"\n"}
       &nbsp;&nbsp;substrate = <span className="text-blue-400">SubstrateInterface</span>(
       url=<span className="text-green-400">"ws://127.0.0.1:9944"</span>,
-      ss58_format=<span className="text-amber-400">42</span>,
+      network_prefix=<span className="text-amber-400">42</span>,
       type_registry_preset=<span className="text-green-400">"default"</span>
       ){"\n"}
       <span className="text-purple-400">except</span> <span className="text-amber-400">ConnectionRefusedError</span> <span className="text-purple-400">as</span> e:{"\n"}
@@ -162,7 +162,7 @@ export default function LandingPage() {
             type: "output",
             text: `[system] Hermes Agent OS v1.0.0 (active)
 [status] Synced with Portaldot local-node
-[keystore] Loaded: DevKeypair (sr25519)
+[keystore] Loaded: DevKeypair
 [inference] 2ms execution latency (powered by Groq)`
           }
         ]);
@@ -313,10 +313,18 @@ export default function LandingPage() {
 
         {/* Dynamic centered terminal UI */}
         <div
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              if (stage === 5) inputRef.current?.focus();
+            }
+          }}
           onClick={() => {
             if (stage === 5) inputRef.current?.focus();
           }}
-          className={`w-full max-w-4xl bg-[#111114] border ${isFocused ? 'border-[#F59E0B]/50 shadow-[0_0_60px_rgba(245,158,11,0.12)]' : 'border-white/[0.06] shadow-[0_0_50px_rgba(0,0,0,0.6)]'} rounded-none overflow-hidden transition-all duration-300 cursor-text`}
+          className={`w-full max-w-4xl bg-[#111114] border ${isFocused ? 'border-[#F59E0B]/50 shadow-[0_0_60px_rgba(245,158,11,0.12)]' : 'border-white/[0.06] shadow-[0_0_50px_rgba(0,0,0,0.6)]'} rounded-none overflow-hidden transition-all duration-300 cursor-text focus:outline-none focus:ring-1 focus:ring-[#F59E0B]`}
         >
           {/* Terminal Window Header */}
           <div className="h-10 bg-black/60 border-b border-white/[0.06] px-4 flex items-center justify-between">
@@ -541,15 +549,25 @@ export default function LandingPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Card 1: Intent Parsing */}
-          <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[AGENT-v1.0]</span>
-            <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#01_INTENT</div>
-            <h3 className="font-sans font-bold text-xl text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Groq Engine</h3>
-            <p className="text-sm md:text-base text-[#F5F0E8]/70 leading-relaxed font-sans font-normal">
-              Transform natural language requests into strict Substrate transaction payloads instantly.
-            </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Card 1: Intent Parsing (Hero Capability) */}
+          <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-10 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default md:col-span-3 flex flex-col md:flex-row md:items-center gap-8">
+            <div className="flex-1 space-y-4">
+              <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[AGENT-v1.0]</span>
+              <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#01_INTENT</div>
+              <h3 className="font-sans font-bold text-2xl md:text-3xl text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Groq Engine</h3>
+              <p className="text-sm md:text-lg text-[#F5F0E8]/70 leading-relaxed font-sans font-normal max-w-xl">
+                Transform natural language requests into strict Substrate transaction payloads instantly. You just ask, Hermes writes the payload.
+              </p>
+            </div>
+            
+            <div className="w-full md:w-[400px] bg-black border border-white/[0.04] p-5 rounded-none font-mono text-xs text-zinc-400 space-y-2">
+               <div className="text-amber-500/50 mb-4">&gt; User</div>
+               <div className="text-zinc-200">"Deploy a new RWA token with 18 decimals."</div>
+               <div className="h-px w-full bg-white/[0.06] my-4"></div>
+               <div className="text-amber-500/50 mb-2">&gt; Hermes compiles</div>
+               <div className="text-green-400 font-bold truncate">payload_hash: 0x8a7b6c...</div>
+            </div>
           </div>
 
           {/* Card 2: Chain Intelligence */}
@@ -562,13 +580,13 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Card 3: Address Inspector */}
+          {/* Card 3: Account Info */}
           <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[ADDR-INSPECT]</span>
-            <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#03_ADDR_INSPECTOR</div>
-            <h3 className="font-sans font-bold text-xl text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Address Inspector</h3>
+            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[ACCOUNT-INFO]</span>
+            <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#03_ACCOUNT_INFO</div>
+            <h3 className="font-sans font-bold text-xl text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Account Info</h3>
             <p className="text-sm md:text-base text-[#F5F0E8]/70 leading-relaxed font-sans font-normal">
-              Inspect any Portaldot address — check balance, nonce, and account type instantly.
+              Inspect any Portaldot account — check balance, nonce, and account type instantly.
             </p>
           </div>
 
@@ -608,7 +626,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Step 1 */}
           <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[SYS-INTENT]</span>
+            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[STEP 1]</span>
             <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#01_INTENT</div>
             <h3 className="font-sans font-bold text-lg text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Type intent</h3>
             <p className="text-xs text-[#F5F0E8]/70 leading-relaxed font-sans">
@@ -618,7 +636,7 @@ export default function LandingPage() {
 
           {/* Step 2 */}
           <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[SYS-PROC]</span>
+            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[STEP 2]</span>
             <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#02_PROCESSING</div>
             <h3 className="font-sans font-bold text-lg text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Parse &amp; Compile</h3>
             <p className="text-xs text-[#F5F0E8]/70 leading-relaxed font-sans">
@@ -628,7 +646,7 @@ export default function LandingPage() {
 
           {/* Step 3 */}
           <div className="relative bg-[#111114] border border-white/[0.06] p-6 md:p-8 space-y-4 rounded-none hover:border-[#F59E0B]/25 hover:shadow-[inset_0_0_20px_rgba(245,158,11,0.08)] transition-[border-color,box-shadow,background-color,color] duration-200 group cursor-default">
-            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[SYS-LIVE]</span>
+            <span className="absolute top-3 right-3 text-[9px] font-mono text-zinc-600 uppercase tracking-widest group-hover:text-[#F59E0B] transition-colors">[STEP 3]</span>
             <div className="text-[#F59E0B] font-bold text-xs font-mono tracking-wider">#03_RESOLVED</div>
             <h3 className="font-sans font-bold text-lg text-[#F5F0E8] group-hover:text-[#F59E0B] transition-colors">Instant Results</h3>
             <p className="text-xs text-[#F5F0E8]/70 leading-relaxed font-sans">
@@ -682,7 +700,7 @@ export default function LandingPage() {
               <h4 className="font-sans font-bold text-[11px] text-[#F5F0E8] uppercase tracking-[0.2em]">Network</h4>
               <ul className="space-y-3 font-mono">
                 <li><span className="text-zinc-600">Portaldot Devnet</span></li>
-                <li><span className="text-zinc-600">Local Node :9944</span></li>
+
                 <li>
                   <span className="inline-flex items-center gap-1.5 text-green-400">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse inline-block"></span>
