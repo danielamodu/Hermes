@@ -153,6 +153,10 @@ def classify_intent(message: str) -> dict:
     if _has(msg, 'deploy', 'instantiate contract', 'upload contract'):
         return _result("deploy_contract", {}, 0.90, message)
 
+    # ── ping_network ──────────────────────────────────────────────────────────
+    if _has(msg, 'ping network', 'ping'):
+        return _result("ping_network", {}, 0.99, message)
+
     # ── unknown ───────────────────────────────────────────────────────────────
     return _result("unknown", {}, 0.0, message)
 

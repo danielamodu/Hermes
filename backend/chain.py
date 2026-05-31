@@ -51,6 +51,8 @@ class ChainClient:
             return self.get_total_issuance(params)
         elif intent == "batch_query":
             return self.batch_query(params)
+        elif intent == "ping_network":
+            return self.ping_network(params)
         elif intent in ["call_contract", "monitor_contract", "tx_history"]:
             # Per user request, unimplemented intents return a standard not_yet_implemented response
             return {
@@ -584,3 +586,36 @@ class ChainClient:
             "status": "success",
             "results": results
         }
+
+    def ping_network(self, params: dict) -> dict:
+        self.connect()
+        if not self.chain:
+            return {"status": "error", "message": "Cannot connect to Portaldot node. Make sure your local node is running."}
+            
+        try:
+            call = self.chain.compose_call(
+                call_module='System',
+                call_function='remark',
+                call_params={
+                    'remark': b'Hello from Hermes'
+                }
+            )
+            
+            keypair = Keypair.create_from_uri("//Alice")
+            extrinsic = self.chain.create_signed_extrinsic(call=call, keypair=keypair)
+            receipt = self.chain.submit_extrinsic(extrinsic, wait_for_inclusion=False)
+            
+            tx_hash = str(getattr(receipt, 'extrinsic_hash', receipt))
+            print(f"Ping broadcasted. tx_hash: {tx_hash}")
+            
+            return {
+                'status': 'success',
+                'data': {
+                    'tx_hash': tx_hash,
+                    'note': 'Ping transaction broadcasted to Portaldot network using Alice.'
+                }
+            }
+                
+        except Exception as e:
+            print(f"ping_network error: {type(e).__name__}: {e}")
+            return {"status": "error", "message": str(e)}

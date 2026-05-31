@@ -5,6 +5,8 @@ import Link from "next/link";
 import { AIPromptBox } from "@/components/ui/ai-prompt-box";
 import { PanelLeftClose, PanelLeftOpen, Plus, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { mnemonicGenerate, cryptoWaitReady } from "@polkadot/util-crypto";
+import { Keyring } from "@polkadot/keyring";
 
 const isValidSS58 = (addr: string) => {
   return typeof addr === "string" && addr.startsWith("5") && (addr.length === 47 || addr.length === 48);
@@ -70,39 +72,23 @@ export default function ChatPage() {
   const [modalInput, setModalInput] = useState("");
   const [modalError, setModalError] = useState<string | null>(null);
   const [isGeneratingWallet, setIsGeneratingWallet] = useState(false);
-  const [showWarningBanner, setShowWarningBanner] = useState(false);
 
   const handleGenerateAddress = async () => {
     setIsGeneratingWallet(true);
     setModalError(null);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: "create a new wallet" }),
-      });
-      if (!res.ok) throw new Error("Failed to generate wallet");
-      const data = await res.json();
+      await cryptoWaitReady();
+      const mnemonic = mnemonicGenerate();
+      const keyring = new Keyring({ type: "sr25519" });
+      const newPair = keyring.addFromUri(mnemonic);
       
-      const address = data?.execution_result?.data?.address;
-      if (address) {
-        setModalInput(address);
-        setShowWarningBanner(true);
-      } else {
-        setModalError("Address generation succeeded but no address was returned. Please try again.");
-      }
+      setModalInput(newPair.address);
     } catch (err: any) {
-      setModalError("Could not connect to the Portaldot node. Check that the backend is running and try again.");
+      setModalError("Failed to generate wallet locally. Please try again.");
     } finally {
       setIsGeneratingWallet(false);
     }
   };
-
-  useEffect(() => {
-    if (!showModal) {
-      setShowWarningBanner(false);
-    }
-  }, [showModal]);
 
   const [showWalletDropdown, setShowWalletDropdown] = useState(false);
   const [showSendForm, setShowSendForm] = useState(false);
@@ -587,12 +573,8 @@ export default function ChatPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isTyping) return;
-
-    const cmd = input.trim();
-    setInput("");
+  const handleSendMessage = (cmd: string) => {
+    if (!cmd.trim() || isTyping) return;
 
     if (activeSessionId === null) {
       const newId = generateUniqueId();
@@ -635,6 +617,14 @@ export default function ChatPage() {
 
       executeCommand(cmd, activeSessionId);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isTyping) return;
+    const cmd = input.trim();
+    setInput("");
+    handleSendMessage(cmd);
   };
 
   useEffect(() => {
@@ -1265,7 +1255,16 @@ export default function ChatPage() {
         {/* Floating Centered Input & Minimalist Footer */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#09090B] via-[#09090B] to-transparent pt-12 pb-6 z-10 shrink-0">
           <div className="w-full max-w-4xl mx-auto px-4 flex flex-col items-center">
-            
+            <div className="w-full max-w-4xl flex justify-end mb-2">
+              <button
+                type="button"
+                onClick={() => handleSendMessage("ping network")}
+                className="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-300 text-xs py-1 px-3 rounded-full transition-colors flex items-center gap-1 font-mono"
+              >
+                <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                Ping Network
+              </button>
+            </div>
             <div className="w-full">
               <AIPromptBox
                 value={input}
@@ -1379,12 +1378,6 @@ export default function ChatPage() {
                     </div>
                   )}
                 </div>
-
-                {showWarningBanner && (
-                  <div className="bg-amber-500/10 border border-amber-500/30 text-amber-500 p-2.5 rounded-lg text-sm leading-normal font-sans">
-                    ⚠️ Your mnemonic has been saved to the server keystore. Write it down before continuing.
-                  </div>
-                )}
 
                 <button
                   type="submit"
