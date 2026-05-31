@@ -550,23 +550,29 @@ export default function ChatPage() {
       );
 
     } catch (error: any) {
+      console.error("Chat error:", error);
+      
+      let errorContent = "[!] Something went wrong. Please try again.";
+      if (error instanceof Error && error.message.startsWith("[!]")) {
+        errorContent = error.message;
+      }
+
       setIsTyping(false);
-      const errMsg: Message = {
-        id: generateUniqueId(),
-        role: "agent",
-        content: "[!] Hermes is temporarily unavailable. Please try again in a moment.",
-        isError: true,
-      };
       setSessions((prev) =>
         prev.map((s) =>
           s.id === sessionId
             ? {
-              ...s,
-              messages: [
-                ...s.messages.filter((m) => !m.reasoning),
-                errMsg,
-              ],
-            }
+                ...s,
+                messages: [
+                  ...s.messages.filter((m) => !m.reasoning),
+                  {
+                    id: generateUniqueId(),
+                    role: "agent",
+                    content: errorContent,
+                    isError: true,
+                  },
+                ],
+              }
             : s
         )
       );

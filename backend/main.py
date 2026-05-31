@@ -308,6 +308,12 @@ def format_response(intent: str, result: dict) -> str:
         short = f"{addr[:6]}…{addr[-4:]}" if len(str(addr)) > 12 else addr
         return f"Contract deployed at {short}."
 
+    # ── ping_network ──────────────────────────────────────────────────────────
+    if intent == "ping_network":
+        tx = data.get("tx_hash", "?")
+        short_tx = f"{tx[:10]}…{tx[-8:]}" if len(str(tx)) > 18 else tx
+        return f"Ping successful! POT gas consumed by Alice. Tx: {short_tx}"
+
     # ── batch_query ───────────────────────────────────────────────────────────
     if intent == "batch_query":
         sub_results = result.get("results", [])
